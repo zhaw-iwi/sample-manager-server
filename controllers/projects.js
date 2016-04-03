@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Project = require('../models/project'),
-    _ = require('lodash');
+    Util = require('../util');
 
 /**
  * Create project
@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
 
     project.save(function (err) {
         if (err) {
-            return res.status(400).send(err);
+            return res.status(400).send(Util.easifyErrors(err));
         }
         res.jsonp(project);
     });
@@ -28,7 +28,6 @@ exports.project = function (req, res, next) {
         .exec(function (err, project) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
-            req.profile = project;
             res.jsonp(project);
         });
 };

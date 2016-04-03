@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Record = require('../models/record'),
-    _ = require('lodash');
+    Util = require('../util');
 
 /**
  * Create record
@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
 
     record.save(function (err) {
         if (err) {
-            return res.status(400).send(err);
+            return res.status(400).send(Util.easifyErrors(err));
         }
         res.jsonp(record);
     });
@@ -28,7 +28,6 @@ exports.record = function (req, res, next) {
         .exec(function (err, record) {
             if (err) return next(err);
             if (!record) return next(new Error('Failed to load Record ' + req.params.recordId));
-            req.profile = record;
             res.jsonp(record);
         });
 };

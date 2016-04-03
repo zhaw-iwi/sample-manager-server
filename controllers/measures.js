@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Measure = require('../models/measure'),
-    _ = require('lodash');
+    Util = require('../util');
 
 /**
  * Create measure
@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
 
     measure.save(function (err) {
         if (err) {
-            return res.status(400).send(err);
+            return res.status(400).send(Util.easifyErrors(err));
         }
         res.jsonp(measure);
     });
@@ -28,7 +28,6 @@ exports.measure = function (req, res, next) {
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
-            req.profile = measure;
             res.jsonp(measure);
         });
 };

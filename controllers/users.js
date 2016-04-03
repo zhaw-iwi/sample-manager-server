@@ -4,7 +4,8 @@
  * Controller dependencies
  */
 var User = require('../models/user'),
-    _ = require('lodash');
+    Util = require('../util');
+
 
 /**
  * Create user
@@ -32,16 +33,7 @@ exports.create = function (req, res, next) {
     req.session.user = user;
     user.save(function (err) {
         if (err) {
-            switch (err.code) {
-                case 11000:
-                case 11001:
-                    res.status(400).send('Username bereits vergeben');
-                    break;
-                default:
-                    res.status(400).send('Bitte alle Felder ausfüllen');
-            }
-
-            return res.status(400);
+            return res.status(400).send(Util.easifyErrors(err));
         }
         res.jsonp(user);
     });
@@ -55,7 +47,6 @@ exports.user = function (req, res, next) {
         .exec(function (err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + req.params.userId));
-            req.profile = user;
             res.jsonp(user);
         });
 };
@@ -104,29 +95,31 @@ exports.all = function (req, res) {
 /**
  * Login
  */
-exports.login = function (req, res) {
+exports.login = function (req, res, next) {
     User.findOne({
-            _id: req.params.userId
+            $or: [{
+                email: req.body.email
+            }, {
+                username: req.body.username
+            }]
         })
         .exec(function (err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + req.params.userId));
 
-            user.remove(function (err) {
-                if (err) {
-                    res.render('error', {
-                        status: 500
-                    });
-                } else {
-                    res.jsonp(user);
-                }
-            });
+            if (user.authenticate(req.body.password)) {
+                req.session.user = user;
+                res.jsonp(user);
+            } else {
+                res.status(400).send({error: 'Falscher Benutzer oder Passwort'});
+            }
         })
 };
 
 /**
  * Logout
  */
-exports.logout = function (req, res) {
+exports.logout = function (req, res, next) {
     req.session.destroy();
+    res.status(200);
 };

@@ -31,6 +31,21 @@ var validateUniqueEmail = function(value, callback) {
     });
 };
 
+var validateUniqueUsername = function(value, callback) {
+    var User = mongoose.model('User');
+    User.find({
+        $and: [{
+            username: value
+        }, {
+            _id: {
+                $ne: this._id
+            }
+        }]
+    }, function(err, user) {
+        callback(err || user.length === 0);
+    });
+};
+
 /**
  * Getter
  */
@@ -58,7 +73,8 @@ var UserSchema = new Schema({
         type: String,
         unique: true,
         required: true,
-        get: escapeProperty
+        get: escapeProperty,
+        validate: [validateUniqueUsername, 'Username wird bereits benutzt!']
     },
     projects: {
         type: [{

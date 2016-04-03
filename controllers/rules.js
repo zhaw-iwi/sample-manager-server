@@ -4,7 +4,7 @@
  * Controller dependencies
  */
 var Rule = require('../models/rule'),
-    _ = require('lodash');
+    Util = require('../util');
 
 /**
  * Create rule
@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
 
     rule.save(function (err) {
         if (err) {
-            return res.status(400).send(err);
+            return res.status(400).send(Util.easifyErrors(err));
         }
         res.jsonp(rule);
     });
@@ -28,7 +28,6 @@ exports.rule = function (req, res, next) {
         .exec(function (err, rule) {
             if (err) return next(err);
             if (!rule) return next(new Error('Failed to load Rule ' + req.params.ruleId));
-            req.profile = rule;
             res.jsonp(rule);
         });
 };
