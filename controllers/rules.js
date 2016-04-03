@@ -24,10 +24,7 @@ exports.create = function (req, res, next) {
  * Find rule by id
  */
 exports.rule = function (req, res, next) {
-    Rule
-        .findOne({
-            _id: req.params.ruleId
-        })
+    Rule.findById(req.params.ruleId)
         .exec(function (err, rule) {
             if (err) return next(err);
             if (!rule) return next(new Error('Failed to load Rule ' + req.params.ruleId));
@@ -39,45 +36,26 @@ exports.rule = function (req, res, next) {
  * Update a rule
  */
 exports.update = function (req, res, next) {
-    Rule.findOne({
+    Rule.findOneAndUpdate({
             _id: req.body._id
-        })
+        },
+        req.body)
         .exec(function (err, rule) {
             if (err) return next(err);
-            if (!rule) return next(new Error('Failed to load Rule ' + req.body._id));
-
-            rule = _.extend(rule, req.body);
-
-            rule.save(function (err) {
-                if (err) return next(err);
-                res.jsonp(rule);
-            });
-
+            if (!rule) return next(new Error('Failed to update Rule ' + req.body._id));
+            res.jsonp(rule);
         });
-
 };
 
 /**
  * Delete an rule
  */
 exports.destroy = function (req, res, next) {
-
-    Rule.findOne({
-            _id: req.params.ruleId
-        })
+    Rule.findByIdAndRemove(req.params.ruleId)
         .exec(function (err, rule) {
             if (err) return next(err);
-            if (!rule) return next(new Error('Failed to load Rule ' + req.params.ruleId));
-
-            rule.remove(function (err) {
-                if (err) {
-                    res.render('error', {
-                        status: 500
-                    });
-                } else {
-                    res.jsonp(rule);
-                }
-            });
+            if (!rule) return next(new Error('Failed to delete Rule ' + req.params.ruleId));
+            res.jsonp(rule);
         })
 };
 

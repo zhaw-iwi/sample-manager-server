@@ -20,7 +20,7 @@ router.post('/', rulesController.create);
 /**
  * Update
  */
-router.put('/:ruleId', rulesController.update);
+router.put('/', rulesController.update);
 
 /**
  * Delete

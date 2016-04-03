@@ -24,10 +24,7 @@ exports.create = function (req, res, next) {
  * Find record by id
  */
 exports.record = function (req, res, next) {
-    Record
-        .findOne({
-            _id: req.params.recordId
-        })
+    Record.findById(req.params.recordId)
         .exec(function (err, record) {
             if (err) return next(err);
             if (!record) return next(new Error('Failed to load Record ' + req.params.recordId));
@@ -39,45 +36,26 @@ exports.record = function (req, res, next) {
  * Update a record
  */
 exports.update = function (req, res, next) {
-    Record.findOne({
+    Record.findOneAndUpdate({
             _id: req.body._id
-        })
+        },
+        req.body)
         .exec(function (err, record) {
             if (err) return next(err);
             if (!record) return next(new Error('Failed to load Record ' + req.body._id));
-
-            record = _.extend(record, req.body);
-
-            record.save(function (err) {
-                if (err) return next(err);
-                res.jsonp(record);
-            });
-
+            res.jsonp(record);
         });
-
 };
 
 /**
- * Delete an record
+ * Delete a record
  */
 exports.destroy = function (req, res, next) {
-
-    Record.findOne({
-            _id: req.params.recordId
-        })
+    Record.findByIdAndRemove(req.params.recordId)
         .exec(function (err, record) {
             if (err) return next(err);
             if (!record) return next(new Error('Failed to load Record ' + req.params.recordId));
-
-            record.remove(function (err) {
-                if (err) {
-                    res.render('error', {
-                        status: 500
-                    });
-                } else {
-                    res.jsonp(record);
-                }
-            });
+            res.jsonp(record);
         })
 };
 

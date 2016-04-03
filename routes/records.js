@@ -20,7 +20,7 @@ router.post('/', recordsController.create);
 /**
  * Update
  */
-router.put('/:recordId', recordsController.update);
+router.put('/', recordsController.update);
 
 /**
  * Delete

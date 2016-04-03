@@ -29,6 +29,7 @@ exports.create = function (req, res, next) {
     // Hard coded for now. Will address this with the user permissions system in v0.3.5
     //user.roles = ['authenticated'];
     user.roles = req.body.roles;
+    req.session.user = user;
     user.save(function (err) {
         if (err) {
             switch (err.code) {
@@ -50,51 +51,66 @@ exports.create = function (req, res, next) {
  * Find user by id
  */
 exports.user = function (req, res, next) {
-    User
-        .findOne({
-            _id: req.params.userId
-        })
+    User.findById(req.params.userId)
         .exec(function (err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + req.params.userId));
             req.profile = user;
             res.jsonp(user);
-            //next();
         });
 };
 /**
  * Update a user
  */
 exports.update = function (req, res, next) {
-    User.findOne({
+    User.findOneAndUpdate({
             _id: req.body._id
-        })
+        },
+        req.body)
         .exec(function (err, user) {
             if (err) return next(err);
-            if (!user) return next(new Error('Failed to load User ' + req.body._id));
-
-            user = _.extend(user, req.body);
-
-            user.save(function (err) {
-                if (err) return next(err);
-                res.jsonp(user);
-            });
-
+            if (!user) return next(new Error('Failed to update User ' + req.body._id));
+            res.jsonp(user);
         });
-
 };
 
 /**
- * Delete an user
+ * Delete a user
  */
 exports.destroy = function (req, res, next) {
+    User.findByIdAndRemove(req.params.userId)
+        .exec(function (err, user) {
+            if (err) return next(err);
+            if (!user) return next(new Error('Failed to delete User ' + req.params.userId));
+            res.jsonp(user);
+        })
+};
 
+/**
+ * List of Users
+ */
+exports.all = function (req, res) {
+    User.find().sort('-created').populate('projects').exec(function (err, users) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(users);
+        }
+    });
+};
+
+/**
+ * Login
+ */
+exports.login = function (req, res) {
     User.findOne({
             _id: req.params.userId
         })
         .exec(function (err, user) {
             if (err) return next(err);
-            if (!user) return next(new Error('Failed to load User ' + req.param('userId')));
+            if (!user) return next(new Error('Failed to load User ' + req.params.userId));
 
             user.remove(function (err) {
                 if (err) {
@@ -109,16 +125,8 @@ exports.destroy = function (req, res, next) {
 };
 
 /**
- * List of Users
+ * Logout
  */
-exports.all = function (req, res) {
-    User.find().sort('-created').populate('user', 'name username').exec(function (err, users) {
-        if (err) {
-            res.render('error', {
-                status: 500
-            });
-        } else {
-            res.jsonp(users);
-        }
-    });
+exports.logout = function (req, res) {
+    req.session.destroy();
 };

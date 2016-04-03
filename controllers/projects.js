@@ -24,10 +24,7 @@ exports.create = function (req, res, next) {
  * Find project by id
  */
 exports.project = function (req, res, next) {
-    Project
-        .findOne({
-            _id: req.params.projectId
-        })
+    Project.findById(req.params.projectId)
         .exec(function (err, project) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
@@ -35,49 +32,31 @@ exports.project = function (req, res, next) {
             res.jsonp(project);
         });
 };
+
 /**
  * Update a project
  */
 exports.update = function (req, res, next) {
-    Project.findOne({
+    Project.findOneAndUpdate({
             _id: req.body._id
-        })
+        },
+        req.body)
         .exec(function (err, project) {
             if (err) return next(err);
-            if (!project) return next(new Error('Failed to load Project ' + req.body._id));
-
-            project = _.extend(project, req.body);
-
-            project.save(function (err) {
-                if (err) return next(err);
-                res.jsonp(project);
-            });
-
+            if (!project) return next(new Error('Failed to update Project ' + req.body._id));
+            res.jsonp(project);
         });
-
 };
 
 /**
- * Delete an project
+ * Delete a project
  */
 exports.destroy = function (req, res, next) {
-
-    Project.findOne({
-            _id: req.params.projectId
-        })
+    Project.findByIdAndRemove(req.params.projectId)
         .exec(function (err, project) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
-
-            project.remove(function (err) {
-                if (err) {
-                    res.render('error', {
-                        status: 500
-                    });
-                } else {
-                    res.jsonp(project);
-                }
-            });
+            res.jsonp(project);
         })
 };
 

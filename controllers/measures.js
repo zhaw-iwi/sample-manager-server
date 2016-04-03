@@ -24,10 +24,7 @@ exports.create = function (req, res, next) {
  * Find measure by id
  */
 exports.measure = function (req, res, next) {
-    Measure
-        .findOne({
-            _id: req.params.measureId
-        })
+    Measure.findById(req.params.measureId)
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
@@ -35,49 +32,30 @@ exports.measure = function (req, res, next) {
             res.jsonp(measure);
         });
 };
+
 /**
  * Update a measure
  */
 exports.update = function (req, res, next) {
-    Measure.findOne({
+    Measure.findOneAndUpdate({
             _id: req.body._id
         })
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.body._id));
-
-            measure = _.extend(measure, req.body);
-
-            measure.save(function (err) {
-                if (err) return next(err);
-                res.jsonp(measure);
-            });
-
+            res.jsonp(measure);
         });
-
 };
 
 /**
  * Delete an measure
  */
 exports.destroy = function (req, res, next) {
-
-    Measure.findOne({
-            _id: req.params.measureId
-        })
+    Measure.findByIdAndRemove(req.params.measureId)
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
-
-            measure.remove(function (err) {
-                if (err) {
-                    res.render('error', {
-                        status: 500
-                    });
-                } else {
-                    res.jsonp(measure);
-                }
-            });
+            res.jsonp(measure);
         })
 };
 

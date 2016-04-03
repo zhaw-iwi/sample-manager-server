@@ -20,7 +20,7 @@ router.post('/', measuresController.create);
 /**
  * Update
  */
-router.put('/:measureId', measuresController.update);
+router.put('/', measuresController.update);
 
 /**
  * Delete

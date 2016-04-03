@@ -31,7 +31,7 @@ var MeasureSchema = new Schema({
         type: String,
         required: true
     },
-    answerValues: {
+    values: {
         type: Array,
         required: true
     },

@@ -60,6 +60,12 @@ var UserSchema = new Schema({
         required: true,
         get: escapeProperty
     },
+    projects: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Project'
+        }]
+    },
     roles: {
         type: Array,
         default: ['authenticated', 'anonymous']
