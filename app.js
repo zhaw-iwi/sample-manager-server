@@ -47,7 +47,20 @@ db.once('open', function () {
 
     app.use(express.static(path.join(__dirname, 'public')));
     //app.use(expressValidator);
+    // Add headers
+    app.use(function (req, res, next) {
+        // Website you wish to allow to connect
+        res.setHeader('Access-Control-Allow-Origin', 'http://svendroid.com');
 
+        // Request methods you wish to allow
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+        // Set to true if you need the website to include cookies in the requests sent
+        // to the API (e.g. in case you use sessions)
+        res.setHeader('Access-Control-Allow-Credentials', true);
+
+        next();
+    });
     app.use('/api/', routes);
     app.use('/api/users', users);
     app.use('/api/projects', projects);
