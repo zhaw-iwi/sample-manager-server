@@ -17,10 +17,12 @@ var proxy = httpProxy.createProxyServer({});
 
 http.createServer(function (req, res) {
     if (req.url.match(/api/)) {
-        proxy.web(req, res, {target: 'http://localhost:' + port});
+        console.log('localhost:' + port);
+        proxy.web(req, res, {target: 'localhost:' + port});
 
     } else {
-        proxy.web(req, res, {target: 'http://localhost:3000'});
+        console.log('http://svendroid.com');
+        proxy.web(req, res, {target: 'http://svendroid.com'});
     }
 }).listen(8080);
 
