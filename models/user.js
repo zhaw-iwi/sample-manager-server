@@ -59,7 +59,7 @@ var escapeProperty = function(value) {
 var UserSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: false,
         get: escapeProperty
     },
     email: {
@@ -71,8 +71,7 @@ var UserSchema = new Schema({
     },
     username: {
         type: String,
-        unique: true,
-        required: true,
+        required: false,
         get: escapeProperty,
         validate: [validateUniqueUsername, 'Username wird bereits benutzt!']
     },

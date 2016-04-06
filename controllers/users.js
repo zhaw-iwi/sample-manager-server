@@ -12,6 +12,7 @@ var User = require('../models/user'),
  */
 exports.create = function (req, res, next) {
     var user = new User(req.body);
+    user.username = req.body.email;
     user.provider = 'local';
 
     // because we set our user.provider to local our models/user.js validation will always be true
@@ -27,10 +28,9 @@ exports.create = function (req, res, next) {
      return res.status(400).send(errors);
      }
      */
-    // Hard coded for now. Will address this with the user permissions system in v0.3.5
-    //user.roles = ['authenticated'];
-    user.roles = req.body.roles;
-    req.session.user = user;
+    // Hard coded for now. Will address this with the user permissions system
+    user.roles = ['authenticated'];
+    //user.roles = req.body.roles;
     user.save(function (err) {
         if (err) {
             return res.status(400).send(Util.easifyErrors(err));
@@ -98,14 +98,14 @@ exports.all = function (req, res) {
 exports.login = function (req, res, next) {
     User.findOne({
             $or: [{
-                email: req.body.email
+                email: req.body.login
             }, {
-                username: req.body.username
+                username: req.body.login
             }]
         })
         .exec(function (err, user) {
             if (err) return next(err);
-            if (!user) return next(new Error('Failed to load User ' + req.params.userId));
+            if (!user) return res.status(400).send({error: 'Falscher Benutzer oder Passwort'});
 
             if (user.authenticate(req.body.password)) {
                 req.session.user = user;
