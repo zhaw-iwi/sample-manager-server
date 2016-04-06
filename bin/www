@@ -12,7 +12,7 @@ var httpProxy = require('http-proxy');
 /**
  * Create proxy server
  */
-
+/*
 var proxy = httpProxy.createProxyServer({});
 
 http.createServer(function (req, res) {
@@ -23,7 +23,7 @@ http.createServer(function (req, res) {
         proxy.web(req, res, {target: 'http://localhost:3000'});
     }
 }).listen(80);
-
+*/
 
 /**
  * Get port from environment and store in Express.
