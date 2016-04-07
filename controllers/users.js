@@ -93,6 +93,17 @@ exports.all = function (req, res) {
 };
 
 /**
+ * Authorize
+ */
+exports.authorize = function (req, res, next) {
+    if (req.session.user && req.session.user.roles.indexOf('authenticated') > -1) {
+        res.jsonp(req.session.user);
+    } else {
+        res.status(401).send({error: 'Bitte loggen Sie sich ein.'});
+    }
+};
+
+/**
  * Login
  */
 exports.login = function (req, res, next) {
@@ -120,6 +131,7 @@ exports.login = function (req, res, next) {
  * Logout
  */
 exports.logout = function (req, res, next) {
+    var user = req.session.user;
     req.session.destroy();
-    res.status(200);
+    res.jsonp(user);
 };

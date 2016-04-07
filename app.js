@@ -26,7 +26,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
     console.log('Connection to DB established');
     // Session setup
-    app.use(cookieParser());
+    app.use(cookieParser('mySecret'));
     app.use(session({
         secret: 'mySecret',
         saveUninitialized: true, // create session until something stored
@@ -48,9 +48,10 @@ db.once('open', function () {
     app.use(express.static(path.join(__dirname, 'public')));
     //app.use(expressValidator);
 
-    // Add headers
+    // Add response headers
     app.use(function (req, res, next) {
         // Allow connections from svendroid.com
+        //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
         res.setHeader('Access-Control-Allow-Origin', 'http://svendroid.com');
         // Allowed request methods
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -61,6 +62,8 @@ db.once('open', function () {
 
         next();
     });
+
+    // Routes
     app.use('/api/', routes);
     app.use('/api/users', users);
     app.use('/api/projects', projects);

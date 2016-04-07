@@ -3,9 +3,19 @@ var router = express.Router();
 var usersController = require('../controllers/users');
 
 /**
+ * Authorize
+ */
+router.get('/authorize', usersController.authorize);
+
+/**
  * Get all
  */
 router.get('/', usersController.all);
+
+/**
+ * Logout
+ */
+router.get('/logout', usersController.logout);
 
 /**
  * Get by id
@@ -32,9 +42,5 @@ router.delete('/:userId', usersController.destroy);
  */
 router.post('/login', usersController.login);
 
-/**
- * Logout
- */
-router.get('/logout', usersController.logout);
 
 module.exports = router;
