@@ -44,6 +44,7 @@ exports.create = function (req, res, next) {
  */
 exports.user = function (req, res, next) {
     User.findById(req.params.userId)
+        .populate('projects')
         .exec(function (err, user) {
             if (err) return next(err);
             if (!user) return next(new Error('Failed to load User ' + req.params.userId));
@@ -97,7 +98,15 @@ exports.all = function (req, res) {
  */
 exports.authorize = function (req, res, next) {
     if (req.session.user && req.session.user.roles.indexOf('authenticated') > -1) {
-        res.jsonp(req.session.user);
+        User.findById(req.session.user._id)
+            .populate('projects')
+            .exec(function (err, user) {
+                if (err) return next(err);
+                if (!user) return next(new Error('Failed to load User ' + req.params.userId));
+                req.session.user = user;
+                res.jsonp(req.session.user);
+            });
+
     } else {
         res.status(401).send({error: 'Bitte loggen Sie sich ein.'});
     }

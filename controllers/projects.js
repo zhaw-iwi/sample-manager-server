@@ -4,6 +4,7 @@
  * Controller dependencies
  */
 var Project = require('../models/project'),
+    User = require('../models/user'),
     Util = require('../util');
 
 /**
@@ -11,12 +12,27 @@ var Project = require('../models/project'),
  */
 exports.create = function (req, res, next) {
     var project = new Project(req.body);
-
+    var randomColor = (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+    if (!project.imageUrl) {
+        project.imageUrl = 'http://dummyimage.com/400x200/' + randomColor + '/000d.png&text=+';
+    }
+    project.users = [req.session.user];
+    project.questions = [];
     project.save(function (err) {
         if (err) {
             return res.status(400).send(Util.easifyErrors(err));
         }
-        res.jsonp(project);
+        req.session.user.projects ? req.session.user.projects.push(project) : req.session.user.projects = [project];
+
+        User.findOneAndUpdate({
+                _id: req.session.user._id
+            },
+            req.session.user)
+            .exec(function (err, user) {
+                if (err) return next(err);
+                if (!user) return next(new Error('Failed to update User ' + req.session.user._id));
+                res.jsonp(project);
+            });
     });
 };
 
@@ -56,7 +72,7 @@ exports.destroy = function (req, res, next) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
             res.jsonp(project);
-        })
+        });
 };
 
 /**
@@ -64,6 +80,23 @@ exports.destroy = function (req, res, next) {
  */
 exports.all = function (req, res) {
     Project.find().sort('-created').populate('users').exec(function (err, projects) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            res.jsonp(projects);
+        }
+    });
+};
+
+/**
+ * List of Projects of User
+ */
+exports.userProjects = function (req, res) {
+    Project.find({
+        _id: req.session.user._id
+    }).sort('-created').populate('users').exec(function (err, projects) {
         if (err) {
             res.render('error', {
                 status: 500
