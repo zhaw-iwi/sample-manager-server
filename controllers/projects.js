@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
     var project = new Project(req.body);
     var randomColor = (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
     if (!project.imageUrl) {
-        project.imageUrl = 'http://dummyimage.com/400x200/' + randomColor + '/000d.png&text=+';
+        project.imageUrl = 'http://dummyimage.com/300x100/' + randomColor + '/000d.png&text=+';
     }
     project.users = [req.session.user];
     project.questions = [];
@@ -41,6 +41,10 @@ exports.create = function (req, res, next) {
  */
 exports.project = function (req, res, next) {
     Project.findById(req.params.projectId)
+        .populate({
+            path: 'measures',
+            populate: { path: 'rules' }
+        })
         .exec(function (err, project) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
