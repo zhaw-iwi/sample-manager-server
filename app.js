@@ -63,6 +63,13 @@ db.once('open', function () {
         next();
     });
 
+    app.use(function noCache(req, res, next) {
+        res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.header("Pragma", "no-cache");
+        res.header("Expires", 0);
+        next();
+    });
+
     // Routes
     app.use('/api/', routes);
     app.use('/api/users', users);
