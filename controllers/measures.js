@@ -25,6 +25,7 @@ exports.create = function (req, res, next) {
             // Insert rules
             var rules = [];
             for (var i = 0; i < req.body.rules.length; i++) {
+                req.body.rules[i].measure = measure._id;
                 rules.push(new Rule(req.body.rules[i]));
             }
             Rule.insertMany(rules);
@@ -54,6 +55,28 @@ exports.measure = function (req, res, next) {
  * Update a measure
  */
 exports.update = function (req, res, next) {
+
+    // Update or Inert rules?
+    var rulesToInsert = [];
+    for (var i = 0; i < req.body.rules.length; i++) {
+        if (req.body.rules[i]._id) {
+            Rule.findOneAndUpdate({
+                    _id: req.body.rules[i]._id
+                }, req.body.rules[i], {upsert: true})
+                .exec(function (err, rule) {
+                    if (err) return next(err);
+                    if (!rule) return next(new Error('Failed to load Rule'));
+                });
+        } else {
+            req.body.rules[i] = new Rule(req.body.rules[i]);
+            rulesToInsert.push(req.body.rules[i]);
+        }
+    }
+    // Insert new rules
+    if (rulesToInsert.length > 0) {
+        Rule.insertMany(rulesToInsert);
+    }
+
     Measure.findOneAndUpdate({
             _id: req.body._id
         }, req.body)
