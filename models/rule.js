@@ -4,8 +4,7 @@
  * Model dependencies
  */
 var mongoose  = require('mongoose'),
-    Schema    = mongoose.Schema,
-    _   = require('lodash');
+    Schema    = mongoose.Schema;
 
 /**
  * Validations

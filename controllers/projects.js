@@ -14,7 +14,7 @@ exports.create = function (req, res, next) {
     var project = new Project(req.body);
     var randomColor = (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
     if (!project.imageUrl) {
-        project.imageUrl = 'http://dummyimage.com/300x100/' + '64B5F6' + '/000d.png&text=+';
+        project.imageUrl = 'http://dummyimage.com/300x100/' + /*'64B5F6'*/ randomColor + '/000d.png&text=+';
     }
     project.users = [req.session.user];
     project.questions = [];
