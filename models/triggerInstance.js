@@ -17,13 +17,19 @@ var mongoose  = require('mongoose'),
 /**
  * Schema
  */
-var RuleSchema = new Schema({
-    begin: Number,
-    end: Number,
-    repeats: Number,
+var TriggerInstanceSchema = new Schema({
+    nextTrigger: Date,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     measure: {
         type: Schema.Types.ObjectId,
         ref: 'Measure'
+    },
+    trigger: {
+        type: Schema.Types.ObjectId,
+        ref: 'Trigger'
     }
 });
 
@@ -41,4 +47,4 @@ var RuleSchema = new Schema({
  * Methods
  */
 
-module.exports = mongoose.model('Rule', RuleSchema);
+module.exports = mongoose.model('TriggerInstance', TriggerInstanceSchema);

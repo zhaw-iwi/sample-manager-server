@@ -31,6 +31,9 @@ var ProjectSchema = new Schema({
         type: Date,
         default: Date.now()
     },
+    finish: {
+        type: Date
+    },
     users: {
         type: [{
             type: Schema.Types.ObjectId,

@@ -44,6 +44,7 @@ exports.create = function (req, res, next) {
  */
 exports.measure = function (req, res, next) {
     Measure.findById(req.params.measureId)
+        .populate({ path: 'rules project' })
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));

@@ -17,24 +17,22 @@ var mongoose  = require('mongoose'),
 /**
  * Schema
  */
-var RecordSchema = new Schema({
-    created: {
-        type: Date,
-        default: Date.now()
-    },
-    value: {
+var TriggerSchema = new Schema({
+    type: {
         type: String,
         required: true
     },
-    location: [Number],
-    answerDuration: Number,
-    measure: {
+    cronExpression: [String],
+    areaTrigger: String,
+    socialTrigger: String,
+    repeats: Number,
+    children: [{
         type: Schema.Types.ObjectId,
-        ref: 'Measure'
-    },
-    user: {
+        ref: 'Trigger'
+    }],
+    project: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'Project'
     }
 });
 
@@ -52,4 +50,4 @@ var RecordSchema = new Schema({
  * Methods
  */
 
-module.exports = mongoose.model('Record', RecordSchema);
+module.exports = mongoose.model('Trigger', TriggerSchema);
