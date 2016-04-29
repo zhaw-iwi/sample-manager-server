@@ -5,7 +5,7 @@
  */
 var Measure = require('../models/measure'),
     Project = require('../models/project'),
-    Rule = require('../models/rule'),
+    Trigger = require('../models/trigger'),
     Util = require('../util');
 
 /**
@@ -22,14 +22,14 @@ exports.create = function (req, res, next) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.body.project._id));
 
-            // Insert rules
-            var rules = [];
-            for (var i = 0; i < req.body.rules.length; i++) {
-                req.body.rules[i].measure = measure._id;
-                rules.push(new Rule(req.body.rules[i]));
+            // Insert triggers
+            var triggers = [];
+            for (var i = 0; i < req.body.triggers.length; i++) {
+                req.body.triggers[i].measure = measure._id;
+                triggers.push(new Trigger(req.body.triggers[i]));
             }
-            Rule.insertMany(rules);
-            measure.rules = rules;
+            Trigger.insertMany(triggers);
+            measure.triggers = triggers;
             measure.save(function (err) {
                 if (err) {
                     return res.status(400).send(Util.easifyErrors(err));
@@ -44,7 +44,7 @@ exports.create = function (req, res, next) {
  */
 exports.measure = function (req, res, next) {
     Measure.findById(req.params.measureId)
-        .populate({ path: 'rules project' })
+        .populate({ path: 'triggers project' })
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
@@ -57,25 +57,25 @@ exports.measure = function (req, res, next) {
  */
 exports.update = function (req, res, next) {
 
-    // Update or Inert rules?
-    var rulesToInsert = [];
-    for (var i = 0; i < req.body.rules.length; i++) {
-        if (req.body.rules[i]._id) {
-            Rule.findOneAndUpdate({
-                    _id: req.body.rules[i]._id
-                }, req.body.rules[i], {upsert: true})
-                .exec(function (err, rule) {
+    // Update or Inert triggers?
+    var triggersToInsert = [];
+    for (var i = 0; i < req.body.triggers.length; i++) {
+        if (req.body.triggers[i]._id) {
+            Trigger.findOneAndUpdate({
+                    _id: req.body.triggers[i]._id
+                }, req.body.triggers[i], {upsert: true})
+                .exec(function (err, trigger) {
                     if (err) return next(err);
-                    if (!rule) return next(new Error('Failed to load Rule'));
+                    if (!trigger) return next(new Error('Failed to load Trigger'));
                 });
         } else {
-            req.body.rules[i] = new Rule(req.body.rules[i]);
-            rulesToInsert.push(req.body.rules[i]);
+            req.body.triggers[i] = new Trigger(req.body.triggers[i]);
+            triggersToInsert.push(req.body.triggers[i]);
         }
     }
-    // Insert new rules
-    if (rulesToInsert.length > 0) {
-        Rule.insertMany(rulesToInsert);
+    // Insert new triggers
+    if (triggersToInsert.length > 0) {
+        Trigger.insertMany(triggersToInsert);
     }
 
     Measure.findOneAndUpdate({

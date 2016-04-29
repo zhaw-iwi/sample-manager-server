@@ -43,7 +43,7 @@ exports.project = function (req, res, next) {
     Project.findById(req.params.projectId)
         .populate({
             path: 'measures',
-            populate: { path: 'rules' }
+            populate: { path: 'triggers' }
         })
         .exec(function (err, project) {
             if (err) return next(err);

@@ -44,18 +44,17 @@ var MeasureSchema = new Schema({
         ref: 'Measure'
     },
     parentValues: {
-        type: Array,
-        required: true
+        type: Array
     },
     project: {
         type: Schema.Types.ObjectId,
         ref: 'Project'
     },
     trigger: {
-        type: [{
+        type: {
             type: Schema.Types.ObjectId,
             ref: 'Trigger'
-        }]
+        }
     }
 });
 

@@ -14,7 +14,7 @@ var routes = require('./routes/index');
 var users = require('./routes/users');
 var projects = require('./routes/projects');
 var measures = require('./routes/measures');
-var rules = require('./routes/rules');
+var triggers = require('./routes/triggers');
 var records = require('./routes/records');
 
 var app = express();
@@ -75,7 +75,7 @@ db.once('open', function () {
     app.use('/api/users', users);
     app.use('/api/projects', projects);
     app.use('/api/measures', measures);
-    app.use('/api/rules', rules);
+    app.use('/api/triggers', triggers);
     app.use('/api/records', records);
 
     //app.param('userId', require('./controllers/users').user);
