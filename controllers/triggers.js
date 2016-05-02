@@ -4,6 +4,7 @@
  * Controller dependencies
  */
 var Trigger = require('../models/trigger'),
+    Project = require('../models/project'),
     Util = require('../util');
 
 /**
@@ -11,13 +12,22 @@ var Trigger = require('../models/trigger'),
  */
 exports.create = function (req, res, next) {
     var trigger = new Trigger(req.body);
+    req.body.project.triggers = req.body.project.triggers || [];
+    req.body.project.triggers.push(trigger);
+    Project.findOneAndUpdate({
+            _id: req.body.project._id
+        }, req.body.project)
+        .exec(function (err, project) {
+            if (err) return next(err);
+            if (!project) return next(new Error('Failed to load Project ' + req.body.project._id));
 
-    trigger.save(function (err) {
-        if (err) {
-            return res.status(400).send(Util.easifyErrors(err));
-        }
-        res.jsonp(trigger);
-    });
+            trigger.save(function (err) {
+                if (err) {
+                    return res.status(400).send(Util.easifyErrors(err));
+                }
+                res.jsonp(trigger);
+            });
+        });
 };
 
 /**
@@ -25,6 +35,9 @@ exports.create = function (req, res, next) {
  */
 exports.trigger = function (req, res, next) {
     Trigger.findById(req.params.triggerId)
+        .populate({
+            path: 'project'
+        })
         .exec(function (err, trigger) {
             if (err) return next(err);
             if (!trigger) return next(new Error('Failed to load Trigger ' + req.params.triggerId));

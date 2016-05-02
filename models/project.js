@@ -46,6 +46,12 @@ var ProjectSchema = new Schema({
             ref: 'Measure'
         }]
     },
+    triggers: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'Trigger'
+        }]
+    },
     imageUrl: String
 });
 

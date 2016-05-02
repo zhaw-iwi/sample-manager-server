@@ -24,11 +24,11 @@ var escapeProperty = function (value) {
 var MeasureSchema = new Schema({
     alias: {
         type: String,
-        get: escapeProperty
+        get: escapeProperty,
+        required: true
     },
     text: {
         type: String,
-        required: true,
         get: escapeProperty
     },
     type: {
@@ -36,8 +36,7 @@ var MeasureSchema = new Schema({
         required: true
     },
     values: {
-        type: Array,
-        required: true
+        type: Array
     },
     parent: {
         type: Schema.Types.ObjectId,
@@ -51,10 +50,8 @@ var MeasureSchema = new Schema({
         ref: 'Project'
     },
     trigger: {
-        type: {
-            type: Schema.Types.ObjectId,
-            ref: 'Trigger'
-        }
+        type: Schema.Types.ObjectId,
+        ref: 'Trigger'
     }
 });
 

@@ -18,14 +18,22 @@ var mongoose  = require('mongoose'),
  * Schema
  */
 var TriggerSchema = new Schema({
+    alias: {
+        type: String,
+        required: true
+    },
     type: {
         type: String,
         required: true
     },
-    cronExpression: [String],
-    areaTrigger: String,
+    timeSpans: [{
+        cronStart: String,
+        cronEnd: String,
+        repeats: Number
+    }],
     socialTrigger: String,
-    repeats: Number,
+    placeTrigger: String,
+    healthTrigger: String,
     children: [{
         type: Schema.Types.ObjectId,
         ref: 'Trigger'
