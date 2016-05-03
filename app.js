@@ -56,7 +56,7 @@ db.once('open', function () {
         // Allowed request methods
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
         // Allowed request headers
-        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+        res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,origin');
         // Include cookies in the request sent
         res.setHeader('Access-Control-Allow-Credentials', true);
 
