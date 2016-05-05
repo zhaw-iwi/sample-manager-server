@@ -31,7 +31,7 @@ function authorize(login, password, callback) {
  * Create config
  */
 exports.create = function (req, res, next) {
-    authorize(req.login, req.password, function(err) {
+    authorize(req.body.login, req.body.password, function(err) {
         if (err) return next(err);
         var config = new Config();
 

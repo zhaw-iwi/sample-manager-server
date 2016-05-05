@@ -152,7 +152,7 @@ UserSchema.methods.isAdmin = function() {
  * @api public
  */
 UserSchema.methods.isSuperAdmin = function() {
-    return this.roles.indexOf('superadministrator') !== -1;
+    return this.roles.indexOf('superadmin') !== -1;
 };
 
 /**
