@@ -81,6 +81,7 @@ var UserSchema = new Schema({
             ref: 'Project'
         }]
     },
+    gcmToken: String,
     roles: {
         type: Array,
         default: ['authenticated', 'anonymous']
@@ -142,6 +143,16 @@ UserSchema.methods.hasRole = function(role) {
  */
 UserSchema.methods.isAdmin = function() {
     return this.roles.indexOf('admin') !== -1;
+};
+
+/**
+ * IsAdmin - check if the user is an administrator
+ *
+ * @return {Boolean}
+ * @api public
+ */
+UserSchema.methods.isSuperAdmin = function() {
+    return this.roles.indexOf('superadministrator') !== -1;
 };
 
 /**

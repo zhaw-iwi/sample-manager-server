@@ -42,5 +42,9 @@ router.delete('/:userId', usersController.destroy);
  */
 router.post('/login', usersController.login);
 
+/**
+ * Register token
+ */
+router.post('/token', usersController.token);
 
 module.exports = router;

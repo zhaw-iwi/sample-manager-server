@@ -12,10 +12,8 @@ var Project = require('../models/project'),
  */
 exports.create = function (req, res, next) {
     var project = new Project(req.body);
-    var randomColor = (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
-    if (!project.imageUrl) {
-        project.imageUrl = 'http://dummyimage.com/300x100/' + /*'64B5F6'*/ randomColor + '/000d.png&text=+';
-    }
+
+    project.imageUrl = generateRandomColorImage();
     project.users = [req.session.user];
     project.questions = [];
     project.save(function (err) {
@@ -36,6 +34,10 @@ exports.create = function (req, res, next) {
     });
 };
 
+function generateRandomColorImage() {
+    var randomColor = (0x1000000+(Math.random())*0xffffff).toString(16).substr(1,6);
+    return 'http://dummyimage.com/300x100/' + /*'64B5F6'*/ randomColor + '/000d.png&text=+'
+}
 /**
  * Find project by id
  */

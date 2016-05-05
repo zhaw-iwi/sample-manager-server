@@ -22,7 +22,9 @@ var app = express();
 // DB setup
 mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/sampleManagerDb');
 var db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error:'));
+
 db.once('open', function () {
     console.log('Connection to DB established');
     // Session setup
@@ -34,6 +36,9 @@ db.once('open', function () {
         store: new MongoStore({mongooseConnection: mongoose.connection}),
         proxy: true
     }));
+
+    // Security: disable powered-by
+    app.disable('x-powered-by');
 
     // view engine setup
     app.set('views', path.join(__dirname, 'views'));
