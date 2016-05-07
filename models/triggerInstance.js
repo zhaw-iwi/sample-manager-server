@@ -19,6 +19,8 @@ var mongoose  = require('mongoose'),
  */
 var TriggerInstanceSchema = new Schema({
     nextTrigger: Date,
+    lastTrigger: Date,
+    triggersLeft: Number,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'

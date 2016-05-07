@@ -26,11 +26,11 @@ var TriggerSchema = new Schema({
         type: String,
         required: true
     },
-    timeSpans: [{
+    timeSpan: {
         cronStart: String,
         cronEnd: String,
         repeats: Number
-    }],
+    },
     socialTrigger: String,
     placeTrigger: String,
     healthTrigger: String,

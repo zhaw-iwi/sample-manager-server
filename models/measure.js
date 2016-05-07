@@ -38,13 +38,13 @@ var MeasureSchema = new Schema({
     values: {
         type: Array
     },
-    parent: {
-        type: Schema.Types.ObjectId,
-        ref: 'Measure'
-    },
-    parentValues: {
-        type: Array
-    },
+    children: [{
+        validValues: Array,
+        childMeasure: {
+            type: Schema.Types.ObjectId,
+            ref: 'Measure'
+        }
+    }],
     project: {
         type: Schema.Types.ObjectId,
         ref: 'Project'

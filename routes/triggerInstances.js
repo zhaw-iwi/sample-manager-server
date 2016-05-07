@@ -7,10 +7,16 @@ var triggerInstancesController = require('../controllers/triggerInstances');
  */
 router.get('/', triggerInstancesController.all);
 
+
+/**
+ * Get all by user
+ */
+router.get('/user/:userId', triggerInstancesController.allByUser);
+
 /**
  * Get by id
  */
-router.get('/:triggerInstanceId', triggerInstancesController.trigger);
+router.get('/:triggerInstanceId', triggerInstancesController.triggerInstance);
 
 /**
  * Create

@@ -15,6 +15,7 @@ var users = require('./routes/users');
 var projects = require('./routes/projects');
 var measures = require('./routes/measures');
 var triggers = require('./routes/triggers');
+var triggerInstances = require('./routes/triggerInstances');
 var records = require('./routes/records');
 var configs = require('./routes/configs');
 
@@ -82,6 +83,7 @@ db.once('open', function () {
     app.use('/api/projects', projects);
     app.use('/api/measures', measures);
     app.use('/api/triggers', triggers);
+    app.use('/api/triggerInstances', triggerInstances);
     app.use('/api/records', records);
     app.use('/api/configs', configs);
 

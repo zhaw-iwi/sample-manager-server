@@ -62,7 +62,9 @@ exports.destroy = function (req, res, next) {
  * List of TriggerInstances
  */
 exports.all = function (req, res) {
-    TriggerInstance.find().sort('-created').exec(function (err, triggerInstances) {
+    TriggerInstance.find().sort('-created')
+        .populate('user measure trigger')
+        .exec(function (err, triggerInstances) {
         if (err) {
             res.render('error', {
                 status: 500
@@ -71,4 +73,22 @@ exports.all = function (req, res) {
             res.jsonp(triggerInstances);
         }
     });
+};
+
+/**
+ * List of TriggerInstances by user
+ */
+exports.allByUser = function (req, res) {
+    TriggerInstance.find({user: req.params.userId})
+        .sort('trigger')
+        .populate('measure trigger')
+        .exec(function (err, triggerInstances) {
+            if (err) {
+                res.render('error', {
+                    status: 500
+                });
+            } else {
+                res.jsonp(triggerInstances);
+            }
+        });
 };

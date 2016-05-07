@@ -31,7 +31,11 @@ var ProjectSchema = new Schema({
         type: Date,
         default: Date.now()
     },
-    finish: {
+
+    start: {
+        type: Date
+    },
+    end: {
         type: Date
     },
     users: {
