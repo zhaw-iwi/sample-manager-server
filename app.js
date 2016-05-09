@@ -13,6 +13,7 @@ var MongoStore = require('connect-mongo')(session);
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var projects = require('./routes/projects');
+var actions = require('./routes/actions');
 var measures = require('./routes/measures');
 var triggers = require('./routes/triggers');
 var triggerInstances = require('./routes/triggerInstances');
@@ -81,6 +82,7 @@ db.once('open', function () {
     app.use('/api/', routes);
     app.use('/api/users', users);
     app.use('/api/projects', projects);
+    app.use('/api/actions', actions);
     app.use('/api/measures', measures);
     app.use('/api/triggers', triggers);
     app.use('/api/triggerInstances', triggerInstances);

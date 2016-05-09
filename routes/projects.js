@@ -8,16 +8,6 @@ var projectsController = require('../controllers/projects');
 router.get('/', projectsController.all);
 
 /**
- * Start project by id
- */
-router.get('/:projectId/start', projectsController.start);
-
-/**
- * Start project by id
- */
-router.get('/:projectId/restart', projectsController.restart);
-
-/**
  * Get by id
  */
 router.get('/:projectId', projectsController.project);

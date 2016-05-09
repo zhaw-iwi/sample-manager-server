@@ -50,8 +50,7 @@ exports.measure = function (req, res, next) {
         .populate({
             path: 'project',
             populate: {
-                path: 'triggers',
-                model: 'Trigger'
+                path: 'triggers users'
             }
         })
         .exec(function (err, measure) {
@@ -125,3 +124,4 @@ exports.all = function (req, res) {
         }
     });
 };
+

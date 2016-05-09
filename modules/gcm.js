@@ -12,7 +12,7 @@ var API_KEY = '';
 /**
  * Send external trigger message via GCM
  */
-exports.sendManualTriggerMessage = function (users, triggerId) {
+exports.sendExternalTriggerMessage = function (users, triggerId) {
 
     var message = new gcm.Message();
     message.addData('action', 'external_trigger');

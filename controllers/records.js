@@ -11,6 +11,7 @@ var Record = require('../models/record'),
  */
 exports.create = function (req, res, next) {
     var record = new Record(req.body);
+    record.created = Date.now();
 
     record.save(function (err) {
         if (err) {
