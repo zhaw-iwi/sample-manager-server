@@ -18,13 +18,23 @@ router.get('/', usersController.all);
 router.get('/logout', usersController.logout);
 
 /**
+ * Get by project
+ */
+router.get('/project/:projectId', usersController.projectUserList);
+
+/**
  * Get by id
  */
 router.get('/:userId', usersController.user);
 
 /**
- * Create
+ * Create users for project
  */
+router.post('/project', usersController.createForProject);
+
+/**
+* Create
+*/
 router.post('/', usersController.create);
 
 /**

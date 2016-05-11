@@ -46,7 +46,7 @@ function generateRandomColorImage() {
 exports.project = function (req, res, next) {
     Project.findById(req.params.projectId)
         .populate({
-            path: 'triggers measures'
+            path: 'triggers measures users'
         })
         .exec(function (err, project) {
             if (err) return next(err);

@@ -4,6 +4,7 @@
  * Controller dependencies
  */
 var User = require('../models/user'),
+    Project = require('../models/project'),
     Util = require('../util');
 
 
@@ -38,6 +39,49 @@ exports.create = function (req, res, next) {
         res.jsonp(user);
     });
 };
+
+/**
+ * Create user
+ */
+exports.createForProject = function (req, res, next) {
+    Project.findById(req.body[0].projects[0])
+        .exec(function (err, project) {
+            var users = [];
+            for (var i = 0; i < req.body.length; i++) {
+                var user = new User(req.body[i]);
+                user.username = user.email;
+                user.provider = 'local';
+                user.password = 'svendroid';
+                //user.password = generatePassword();
+                // Hard coded for now. Will address this with the user permissions system
+                user.roles = ['authenticated'];
+
+                users.push(user);
+                project.users.push(user);
+            }
+            User.insertMany(users);
+
+            project.save(function (err) {
+                if (err) {
+                    return res.status(400).send(Util.easifyErrors(err));
+                }
+                res.jsonp(users);
+            });
+        });
+};
+
+function generatePassword() {
+    var text = "";
+    var possible = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+        'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+    for (var i = 0; i < 8; i++) {
+        text += possible[Math.floor(Math.random() * possible.length)];
+    }
+
+    return text;
+}
 
 /**
  * Find user by id
@@ -161,5 +205,20 @@ exports.token = function (req, res, next) {
                 }
                 res.jsonp(user);
             });
+        });
+};
+
+/**
+ * List of non-admin users of project
+ */
+exports.projectUserList = function (req, res, next) {
+    User.find({roles: {$not: /admin/}, project: req.params.projectId})
+        .sort('email')
+        .exec(function (err, users) {
+            if (err) return next(err);
+            if (!users) return next(new Error('Failed to load Users for Project ' + req.params.projectId));
+
+            res.jsonp(users);
+
         });
 };
