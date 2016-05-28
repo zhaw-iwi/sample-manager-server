@@ -13,6 +13,11 @@ router.get('/', recordsController.all);
 router.get('/:recordId', recordsController.record);
 
 /**
+ * Get by id
+ */
+router.get('/project/:projectId', recordsController.recordsByProject);
+
+/**
  * Create
  */
 router.post('/', recordsController.create);
