@@ -7,7 +7,8 @@ var Project = require('../models/project'),
     User = require('../models/user'),
     TriggerInstance = require('../models/triggerInstance'),
     GCM = require('../modules/gcm'),
-    Util = require('../util');
+    Util = require('../util'),
+    _   = require('lodash');
 
 /**
  * Create project
@@ -159,24 +160,28 @@ function subscribeAsyncLoop(i, projects, userId, callback) {
         Project.findOne({_id: projects[i].projectId})
             .exec(function (err, project) {
 
-                // Add or remove from project
-                if (updateProject.checkedIn) {
-                    if (project.users.indexOf(userId) === -1) {
-                        project.users.push(userId);
-                        console.log('user ' + userId + ' subscribe to project ' + project._id)
-                    }
-                } else {
-                    project.users.splice(project.users.indexOf(userId), 1);
-                    console.log('user ' + userId + ' unsubscribe to project ' + project._id)
-                }
+                User.findById(userId)
+                    .exec(function (err, user) {
+                        // Add or remove from project
+                        if (updateProject.checkedIn) {
+                            if (project.users.indexOf(user) === -1) {
+                                project.users.push(user);
+                                console.log('user ' + userId + ' subscribe to project ' + project._id)
+                            }
+                        } else {
+                            project.users.splice(project.users.indexOf(user), 1);
+                            console.log('user ' + userId + ' unsubscribe to project ' + project._id)
+                        }
 
-                Project.findOneAndUpdate({
-                        _id: project._id
-                    },
-                    project)
-                    .exec(function (err, project) {
-                        subscribeAsyncLoop(++i, projects, userId, callback);
+                        Project.findOneAndUpdate({
+                                _id: project._id
+                            },
+                            project)
+                            .exec(function (err, project) {
+                                subscribeAsyncLoop(++i, projects, userId, callback);
+                            });
                     });
+
 
         });
     } else {

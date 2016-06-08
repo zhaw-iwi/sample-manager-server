@@ -88,6 +88,7 @@ exports.allByUser = function (req, res) {
                     status: 500
                 });
             } else {
+                
                 res.jsonp(triggerInstances);
             }
         });
