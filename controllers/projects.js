@@ -116,3 +116,70 @@ exports.userProjects = function (req, res) {
     });
 };
 
+/**
+ * List of Projects for joining on mobile
+ */
+exports.mobileProjects = function (req, res) {
+    Project.find().sort('-created').exec(function (err, projects) {
+        if (err) {
+            res.render('error', {
+                status: 500
+            });
+        } else {
+            var result = [];
+            for (var i = 0; i < projects.length; i++) {
+                result.push({
+                    _id: projects[i]._id,
+                    name: projects[i].name,
+                    users: projects[i].users,
+                    imageUrl: projects[i].imageUrl,
+                    checkedIn: projects[i].users.indexOf(req.params.userId) > -1
+                })
+            }
+            res.jsonp(result);
+        }
+    });
+};
+
+/**
+ * Update user subscriptions
+ */
+exports.subscribe = function (req, res) {
+
+    res.jsonp({});
+
+    subscribeAsyncLoop(0, req.body.projects, req.body.userId, function(err) {
+
+    });
+};
+
+function subscribeAsyncLoop(i, projects, userId, callback) {
+    if (i < projects.length) {
+        var updateProject = projects[i];
+        Project.findOne({_id: projects[i].projectId})
+            .exec(function (err, project) {
+
+                // Add or remove from project
+                if (updateProject.checkedIn) {
+                    if (project.users.indexOf(userId) === -1) {
+                        project.users.push(userId);
+                        console.log('user ' + userId + ' subscribe to project ' + project._id)
+                    }
+                } else {
+                    project.users.splice(project.users.indexOf(userId), 1);
+                    console.log('user ' + userId + ' unsubscribe to project ' + project._id)
+                }
+
+                Project.findOneAndUpdate({
+                        _id: project._id
+                    },
+                    project)
+                    .exec(function (err, project) {
+                        subscribeAsyncLoop(++i, projects, userId, callback);
+                    });
+
+        });
+    } else {
+        callback();
+    }
+}

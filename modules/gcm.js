@@ -60,25 +60,25 @@ exports.sendMeasureUpdateMessage = function (users, measureId) {
 /**
  * Send a project start message via GCM
  */
-exports.sendProjectStartMessage = function (users, projectId) {
+exports.sendProjectStartMessage = function (projectId) {
 
     var message = new gcm.Message();
     message.addData('action', 'project_start');
     message.addData('projectId', projectId);
 
-    sendMessage(message, users);
+    sendMessage(message, projectId);
 };
 
 /**
  * Send a project end message via GCM
  */
-exports.sendProjectEndMessage = function (users, projectId) {
+exports.sendProjectEndMessage = function (projectId) {
 
     var message = new gcm.Message();
-    message.addData('type', 'project_end');
+    message.addData('action', 'project_end');
     message.addData('projectId', projectId);
 
-    sendMessage(message, users);
+    sendMessage(message, projectId);
 };
 
 /**
@@ -87,7 +87,7 @@ exports.sendProjectEndMessage = function (users, projectId) {
  */
 function getApiKey(callback) {
     if (API_KEY !== '') {
-        callback(API_KEY);
+        callback(null, API_KEY);
     }
     Config.findOne({
             key: 'api_key'
@@ -97,16 +97,16 @@ function getApiKey(callback) {
             if (!config) return callback({message: 'No API key'});
 
             API_KEY = config.value;
-            callback(undefined, config.value);
+            callback(null, config.value);
         })
 }
 
 /**
  * Send message to reqTokens
  * @param message
- * @param users
+ * @param to
  */
-function sendMessage(message, users) {
+function sendMessage(message, to) {
     getApiKey(function (err, apiKey) {
         if (err) {
             return console.log(err.message);
@@ -114,15 +114,22 @@ function sendMessage(message, users) {
         // Set up the sender with API key
         var sender = new gcm.Sender(apiKey);
 
-        users = _.filter(users, function(user) {
-            return user.gcmToken !== undefined;
-        });
+        var target = {};
+        if (Array.isArray(to)) {
+            to = _.filter(to, function(user) {
+                return user.gcmToken !== undefined;
+            });
 
-        var regTokens = _.map(users, function(user) {
-            return user.gcmToken;
-        });
+            target.registrationTokens = _.map(to, function(user) {
+                return user.gcmToken;
+            });
 
-        sender.send(message, {registrationTokens: regTokens}, function (err, response) {
+        } else {
+            target.topic = to;
+        }
+
+
+        sender.send(message, target, function (err, response) {
             if (err) console.error(err);
             else    console.log(response);
         });

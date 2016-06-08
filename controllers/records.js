@@ -90,29 +90,34 @@ exports.recordsByProject = function (req, res) {
                 });
             } else {
 
-                var result = [];
-                for (var i = 0; i < measures.length; i++) {
-                    (function(innerI) {
-                        Record.find({measure: '57461a3628df4ce82525d1e5'}).populate('user').sort('-created')
-                            .exec(function (err, records) {
-                                if (err) {
-                                    res.render('error', {
-                                        status: 500
-                                    });
-                                } else {
-                                    result.push({
-                                        _id: measures[innerI]._id,
-                                        alias: measures[innerI].alias,
-                                        records: records
-                                    })
-                                }
-                                if (innerI >= measures.length - 1) {
-                                    res.jsonp(result);
-                                }
-                            });
-                    }(i));
-                }
+                findMeasureAsyncLoop(0, measures, [], function(result) {
+                    res.jsonp(result);
+                });
+
             }
     });
 
 };
+
+function findMeasureAsyncLoop(i, measures, result, callback) {
+    if (i < measures.length) {
+        Record.find({measure: measures[i]._id}).populate('user').sort('-created')
+            .exec(function (err, records) {
+                if (err) {
+                    res.render('error', {
+                        status: 500
+                    });
+                } else {
+                    result.push({
+                        _id: measures[i]._id,
+                        alias: measures[i].alias,
+                        records: records
+                    })
+                }
+                findMeasureAsyncLoop(++i, measures, result, callback);
+            });
+    } else {
+        callback(result);
+    }
+
+}

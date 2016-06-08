@@ -38,6 +38,10 @@ var ProjectSchema = new Schema({
     end: {
         type: Date
     },
+    state: {
+        type: String,
+        default: 'preparing'
+    },
     users: {
         type: [{
             type: Schema.Types.ObjectId,

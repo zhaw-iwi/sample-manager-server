@@ -13,7 +13,7 @@ router.get('/', recordsController.all);
 router.get('/:recordId', recordsController.record);
 
 /**
- * Get by id
+ * Get records by project id
  */
 router.get('/project/:projectId', recordsController.recordsByProject);
 
