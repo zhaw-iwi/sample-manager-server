@@ -194,18 +194,22 @@ exports.logout = function (req, res, next) {
  */
 exports.token = function (req, res, next) {
 
-    User.findById(req.body.user_id)
-        .exec(function (err, user) {
-            if (err) return next(err);
-            if (!user) return next(new Error('Failed to load User ' + req.body.user_id));
-            user.gcmToken = req.body.gcmToken;
-            user.save(function (err) {
-                if (err) {
-                    return res.status(400).send(Util.easifyErrors(err));
-                }
-                res.jsonp(user);
-            });
-        });
+    var user = new User();
+    user.email = user._id;
+    user.username = user.email;
+    user.provider = 'local';
+    user.password = 'svendroid';
+    //user.password = generatePassword();
+    // Hard coded for now. Will address this with the user permissions system
+    user.roles = ['authenticated'];
+    user.gcmToken = req.body.token;
+
+    user.save(function (err) {
+        if (err) return next(err);
+            res.jsonp(user);
+    });
+
+
 };
 
 /**
