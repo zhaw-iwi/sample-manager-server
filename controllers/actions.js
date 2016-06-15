@@ -82,9 +82,9 @@ exports.triggerManual = function (req, res) {
         .exec(function (err, measure) {
             if (err) return next(err);
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
-
+            
             var users = req.users || measure.project.users;
-            GCM.sendManualTriggerMessage(users, measure._id);
+            GCM.sendManualTriggerMessage(measure.project._id, measure._id);
 
             res.jsonp(measure);
         });
