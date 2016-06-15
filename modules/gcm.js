@@ -24,13 +24,13 @@ exports.sendExternalTriggerMessage = function (users, triggerId) {
 /**
  * Send manual trigger message via GCM
  */
-exports.sendManualTriggerMessage = function (projectId, measureId) {
+exports.sendManualTriggerMessage = function (users, measureId) {
 
     var message = new gcm.Message();
     message.addData('action', 'manual_trigger');
     message.addData('measureId', measureId);
 
-    sendMessage(message, projectId);
+    sendMessage(message, users);
 };
 
 /**

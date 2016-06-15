@@ -84,7 +84,7 @@ exports.triggerManual = function (req, res) {
             if (!measure) return next(new Error('Failed to load Measure ' + req.params.measureId));
             
             var users = req.users || measure.project.users;
-            GCM.sendManualTriggerMessage(measure.project._id, measure._id);
+            GCM.sendManualTriggerMessage(users, measure._id);
 
             res.jsonp(measure);
         });
