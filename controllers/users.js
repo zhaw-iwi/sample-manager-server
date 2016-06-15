@@ -195,8 +195,8 @@ exports.logout = function (req, res, next) {
 exports.token = function (req, res, next) {
 
     var user = new User();
-    user.email = 'user_' + (Math.random() * 9999999) + '@svendroid.com';
-    user.username = user.email;
+    user.username = 'user_' + Math.round(Math.random() * 9999999);
+    user.email = user.username + '@svendroid.com';
     user.provider = 'local';
     user.password = 'svendroid';
     //user.password = generatePassword();
