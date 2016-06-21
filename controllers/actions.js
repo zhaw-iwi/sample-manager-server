@@ -45,7 +45,7 @@ exports.start = function (req, res) {
             }
             TriggerInstance.insertMany(triggerInstances);
 
-            GCM.sendProjectStartMessage(project._id);
+            GCM.sendProjectStartMessage(project.users, project._id);
         });
 };
 
@@ -61,7 +61,7 @@ exports.restart = function (req, res) {
             if (err) return next(err);
             if (!project) return next(new Error('Failed to load Project ' + req.params.projectId));
 
-            GCM.sendProjectStartMessage(project._id);
+            GCM.sendProjectStartMessage(project.users, project._id);
 
             res.jsonp(project);
         });

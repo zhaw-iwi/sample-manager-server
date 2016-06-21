@@ -60,25 +60,25 @@ exports.sendMeasureUpdateMessage = function (users, measureId) {
 /**
  * Send a project start message via GCM
  */
-exports.sendProjectStartMessage = function (projectId) {
+exports.sendProjectStartMessage = function (users, projectId) {
 
     var message = new gcm.Message();
     message.addData('action', 'project_start');
     message.addData('projectId', projectId);
 
-    sendMessage(message, projectId);
+    sendMessage(message, users);
 };
 
 /**
  * Send a project end message via GCM
  */
-exports.sendProjectEndMessage = function (projectId) {
+exports.sendProjectEndMessage = function (users, projectId) {
 
     var message = new gcm.Message();
     message.addData('action', 'project_end');
     message.addData('projectId', projectId);
 
-    sendMessage(message, projectId);
+    sendMessage(message, users);
 };
 
 /**

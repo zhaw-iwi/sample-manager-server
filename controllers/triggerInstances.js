@@ -4,6 +4,7 @@
  * Controller dependencies
  */
 var TriggerInstance = require('../models/triggerInstance'),
+    Project = require('../models/project'),
     Util = require('../util');
 
 /**
@@ -78,7 +79,46 @@ exports.all = function (req, res) {
 /**
  * List of TriggerInstances by user
  */
-exports.allByUser = function (req, res) {
+exports.allByProject = function (req, res, next) {
+    Project.findById(req.params.projectId)
+        .populate({
+            path: 'measures',
+            populate: {
+                path: 'trigger'
+            }
+        })
+        .exec(function (err, project) {
+            if (err) return next(err);
+            if (!project) return next(new Error('Failed to load Project ' + req.body.project._id));
+
+            project.start = Date.now();
+            project.save(function (err) {
+                if (err) {
+                    return res.status(400).send(Util.easifyErrors(err));
+                }
+                //res.jsonp(project);
+            });
+
+            var triggerInstances = [];
+            //for (var i = 0; i < project.users.length; i++) {
+                for (var j = 0; j < project.measures.length; j++) {
+                    if ( project.measures[j].trigger) {
+                        var triggerInstance = {};
+                        //triggerInstance.user = project.users[i]._id;
+                        triggerInstance.measure = project.measures[j];
+                        delete triggerInstance.measure.trigger;
+                        triggerInstance.trigger = project.measures[j].trigger;
+                        if (triggerInstance.trigger.type === 'random') {
+                            triggerInstance.triggersLeft = triggerInstance.trigger.timeSpan.repeats;
+                        }
+                        triggerInstances.push(triggerInstance);
+                    }
+                }
+            //}
+            //TriggerInstance.insertMany(triggerInstances);
+            res.jsonp(triggerInstances);
+        });
+/*
     TriggerInstance.find({user: req.params.userId})
         .sort('trigger')
         .populate('measure trigger')
@@ -92,4 +132,5 @@ exports.allByUser = function (req, res) {
                 res.jsonp(triggerInstances);
             }
         });
+*/
 };

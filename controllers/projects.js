@@ -163,26 +163,38 @@ function subscribeAsyncLoop(i, projects, userId, callback) {
                 User.findById(userId)
                     .exec(function (err, user) {
                         // Add or remove from project
+                        var hasChanges = false;
                         if (updateProject.checkedIn) {
-                            if (project.users.indexOf(user) === -1) {
+                            if (!_.find(project.users, function(item) {
+                                    return item._id === user._id;
+                                })) {
                                 project.users.push(user);
-                                console.log('user ' + userId + ' subscribe to project ' + project._id)
+                                console.log('user ' + userId + ' subscribe to project ' + project._id);
+                                hasChanges = true;
                             }
                         } else {
-                            project.users.splice(project.users.indexOf(user), 1);
-                            console.log('user ' + userId + ' unsubscribe to project ' + project._id)
+                            var userIndex = _.findIndex(project.users, function (item) {
+                                return item._id === user._id;
+                            });
+                            if (userIndex > -1) {
+                                project.users.splice(userIndex, 1);
+                                console.log('user ' + userId + ' unsubscribe to project ' + project._id);
+                                hasChanges = true;
+                            }
                         }
 
-                        Project.findOneAndUpdate({
-                                _id: project._id
-                            },
-                            project)
-                            .exec(function (err, project) {
-                                subscribeAsyncLoop(++i, projects, userId, callback);
-                            });
+                        if (hasChanges) {
+                            Project.findOneAndUpdate({
+                                    _id: project._id
+                                },
+                                project)
+                                .exec(function (err, project) {
+                                    subscribeAsyncLoop(++i, projects, userId, callback);
+                                });
+                        } else {
+                            subscribeAsyncLoop(++i, projects, userId, callback);
+                        }
                     });
-
-
         });
     } else {
         callback();

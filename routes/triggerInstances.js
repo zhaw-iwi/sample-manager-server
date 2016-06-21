@@ -9,9 +9,9 @@ router.get('/', triggerInstancesController.all);
 
 
 /**
- * Get all by user
+ * Get all by project
  */
-router.get('/user/:userId', triggerInstancesController.allByUser);
+router.get('/project/:projectId', triggerInstancesController.allByProject);
 
 /**
  * Get by id
