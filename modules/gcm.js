@@ -87,7 +87,7 @@ exports.sendProjectEndMessage = function (users, projectId) {
  */
 function getApiKey(callback) {
     if (API_KEY !== '') {
-        callback(null, API_KEY);
+        return callback(null, API_KEY);
     }
     Config.findOne({
             key: 'api_key'
@@ -97,7 +97,7 @@ function getApiKey(callback) {
             if (!config) return callback({message: 'No API key'});
 
             API_KEY = config.value;
-            callback(null, config.value);
+            return callback(null, config.value);
         })
 }
 

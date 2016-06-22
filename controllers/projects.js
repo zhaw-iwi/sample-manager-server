@@ -165,20 +165,20 @@ function subscribeAsyncLoop(i, projects, userId, callback) {
                         // Add or remove from project
                         var hasChanges = false;
                         if (updateProject.checkedIn) {
-                            if (!_.find(project.users, function(item) {
-                                    return item._id === user._id;
+                            if (!_.find(project.users, function(user_id) {
+                                    return user_id.id === user._id.id;
                                 })) {
                                 project.users.push(user);
                                 console.log('user ' + userId + ' subscribe to project ' + project._id);
                                 hasChanges = true;
                             }
                         } else {
-                            var userIndex = _.findIndex(project.users, function (item) {
-                                return item._id === user._id;
+                            var userIndex = _.findIndex(project.users, function (user_id) {
+                                return user_id.id === user._id.id;
                             });
                             if (userIndex > -1) {
                                 project.users.splice(userIndex, 1);
-                                console.log('user ' + userId + ' unsubscribe to project ' + project._id);
+                                console.log('user ' + userId + ' unsubscribe from project ' + project._id);
                                 hasChanges = true;
                             }
                         }
