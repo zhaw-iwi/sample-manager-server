@@ -42,6 +42,10 @@ var ProjectSchema = new Schema({
         type: String,
         default: 'preparing'
     },
+    type: {
+        type: String,
+        default: 'public'
+    },
     users: {
         type: [{
             type: Schema.Types.ObjectId,

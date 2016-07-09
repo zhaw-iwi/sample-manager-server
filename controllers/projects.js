@@ -118,10 +118,10 @@ exports.userProjects = function (req, res) {
 };
 
 /**
- * List of Projects for joining on mobile
+ * List of public Projects for joining on mobile
  */
 exports.mobileProjects = function (req, res) {
-    Project.find().sort('-created').exec(function (err, projects) {
+    Project.find({type: 'public'}).sort('-created').exec(function (err, projects) {
         if (err) {
             res.render('error', {
                 status: 500

@@ -194,20 +194,45 @@ exports.logout = function (req, res, next) {
  */
 exports.token = function (req, res, next) {
 
-    var user = new User();
-    user.username = 'user_' + Math.round(Math.random() * 9999999);
-    user.email = user.username + '@svendroid.com';
-    user.provider = 'local';
-    user.password = 'svendroid';
-    //user.password = generatePassword();
-    // Hard coded for now. Will address this with the user permissions system
-    user.roles = ['authenticated'];
-    user.gcmToken = req.body.token;
+    if (req.body.email || req.body.email === '') {
+        var user = new User();
 
-    user.save(function (err) {
-        if (err) return next(err);
+        if (req.body.email === '') {
+            user.username = 'user_' + Math.round(Math.random() * 9999999);
+            user.email = user.username + '@svendroid.com';
+        } else {
+            user.username = req.body.email;
+            user.email = req.body.email;
+        }
+        user.provider = 'local';
+        user.password = 'svendroid';
+        //user.password = generatePassword();
+        // Hard coded for now. Will address this with the user permissions system
+        user.roles = ['authenticated'];
+        user.gcmToken = req.body.token;
+
+        user.save(function (err) {
+            if (err) return next(err);
             res.jsonp(user);
-    });
+        });
+
+    } else if (req.body.userId) {
+        User.findOne({
+            _id: req.body.userId
+        })
+            .exec(function (err, user) {
+                if (err) return next(err);
+                if (!user) return res.status(400).send({error: 'User nicht gefunden'});
+
+                user.gcmToken = user.body.token;
+
+                user.save(function (err) {
+                    if (err) return next(err);
+                    res.jsonp(user);
+                });
+            })
+    }
+
 
 
 };
