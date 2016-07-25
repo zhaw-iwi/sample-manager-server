@@ -211,10 +211,19 @@ exports.token = function (req, res, next) {
         user.roles = ['authenticated'];
         user.gcmToken = req.body.token;
 
-        user.save(function (err) {
-            if (err) return next(err);
-            res.jsonp(user);
-        });
+        User.update({
+                email: user.email
+            },
+            user,
+            {
+                upsert: true
+            })
+            .exec(function (err, user) {
+                if (err) return next(err);
+                if (!user) return next(new Error('Failed to update User ' + req.body._id));
+                res.jsonp(user);
+            });
+        
 
     } else if (req.body.userId) {
         User.findOne({
