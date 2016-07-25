@@ -31,6 +31,10 @@ var TriggerSchema = new Schema({
         cronEnd: String,
         repeats: Number
     },
+    timers: [{
+        hour: Number,
+        minute: Number
+    }],
     socialTrigger: String,
     placeTrigger: String,
     healthTrigger: String,
