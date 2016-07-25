@@ -218,9 +218,9 @@ exports.token = function (req, res, next) {
             {
                 upsert: true
             })
-            .exec(function (err, user) {
+            .exec(function (err, response) {
                 if (err) return next(err);
-                if (!user) return next(new Error('Failed to update User ' + req.body._id));
+                if (!response) return next(new Error('Failed to update User ' + req.body._id));
                 res.jsonp(user);
             });
         
