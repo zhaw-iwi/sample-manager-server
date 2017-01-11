@@ -53,14 +53,14 @@ db.once('open', function () {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
 
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(path.join(__dirname, 'public/frontend')));
     //app.use(expressValidator);
 
     // Add response headers
     app.use(function (req, res, next) {
         // Allow connections from svendroid.com
-        //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-        res.setHeader('Access-Control-Allow-Origin', 'http://svendroid.com');
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        //res.setHeader('Access-Control-Allow-Origin', 'http://svendroid.com');
         // Allowed request methods
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
         // Allowed request headers
