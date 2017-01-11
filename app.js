@@ -57,6 +57,7 @@ db.once('open', function () {
     //app.use(expressValidator);
 
     // Add response headers
+    /*
     app.use(function (req, res, next) {
         // Allow connections from svendroid.com
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -70,7 +71,7 @@ db.once('open', function () {
 
         next();
     });
-
+    */
     app.use(function noCache(req, res, next) {
         res.header("Cache-Control", "no-cache, no-store, must-revalidate");
         res.header("Pragma", "no-cache");
