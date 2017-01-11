@@ -1,3 +1,19 @@
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: dimgray;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-track {
+  background-color: rgba(130, 130, 130, 0.3);
+}
+
 h1, h2, h3, h4, h5 {
   color: #1d1d1d;
 }

@@ -4,7 +4,7 @@ import {Http, Headers} from 'angular2/http';
 
 @Injectable()
 export class HttpService {
-  private host:string = 'https://mighty-everglades-95815.herokuapp.com/';
+  private host:string = 'https://svendroid.herokuapp.com/';
   //private host:string = 'http://localhost:3001/';
 
   constructor(private _http: Http) {
