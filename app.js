@@ -23,7 +23,7 @@ var configs = require('./routes/configs');
 var app = express();
 
 // DB setup
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/sampleManagerDb');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/sampleManagerDb');
 var db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
