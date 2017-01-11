@@ -1033,7 +1033,7 @@ webpackJsonp([0],{
 	var HttpService = (function () {
 	    function HttpService(_http) {
 	        this._http = _http;
-	        this.host = 'http://localhost:3001/';
+	        this.host = 'https://mighty-everglades-95815.herokuapp.com/';
 	    }
 	    HttpService.prototype.createHeaders = function () {
 	        var headers = new http_1.Headers();
