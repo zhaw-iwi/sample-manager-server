@@ -1,0 +1,11 @@
+.card.trigger-type {
+  height: 150px;
+}
+.trigger-type .card-content {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+.modal-footer > button {
+  margin-right: 5px;
+}

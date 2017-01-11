@@ -1,0 +1,119 @@
+<!-- Loading Spinner -->
+<div *ngIf="showLoadingSpinner">
+  <br>
+  <br>
+  <br>
+  <loading-spinner [smTrigger]="showLoadingSpinner"></loading-spinner>
+</div>
+
+<div class="card" *ngIf="tempTrigger">
+  <div class="card-content">
+    <div class="black-text card-title">
+      <i class="left medium material-icons " style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+      <span>Trigger bearbeiten</span>
+    </div>
+    <div class="row">
+      <div class="input-field col s12 m12 l12">
+        <button materialize="dropdown"
+                [materializeParams]="[{constrainwidth: true}]"
+                class="dropdown-button btn right"
+                [attr.data-activates]="'myTrigger'">
+          <i class="left material-icons">{{getIconByType(tempTrigger.type)}}</i>{{'triggerType_' + tempTrigger.type | translate}}
+        </button>
+
+      </div>
+      <div class="input-field col s12 m12 l12">
+        <input id="alias" type="text" class="validate" [(ngModel)]="tempTrigger.alias" autofocus>
+        <label for="alias">Alias</label>
+      </div>
+
+      <!-- Time span: for not timer tpyes -->
+      <table *ngIf="timeSpan && tempTrigger.type !== 'timer'">
+        <thead>
+        <tr>
+          <th data-field="id" class="center-align"><i class="material-icons">first_page</i></th>
+          <th data-field="name" class="center-align"><i class="material-icons">last_page</i></th>
+          <th data-field="price" class="center-align"><i class="material-icons">replay</i></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr>
+          <td class="center-align">
+            {{timeSpan.begin}} Uhr
+            <div class="range-field">
+              <input type="range" min="0" max="{{timeSpan.end}}" [(ngModel)]="timeSpan.begin" (change)="timeSpan.begin = $event.target.value"/>
+            </div>
+          </td>
+          <td class=center-align>
+            {{timeSpan.end}} Uhr
+            <div class="range-field">
+              <input type="range" min="{{timeSpan.begin}}" max="24" [(ngModel)]="timeSpan.end" (change)="timeSpan.end = $event.target.value"/>
+            </div>
+          </td>
+          <td class="center-align">
+            {{timeSpan.repeats}} mal
+            <div class="range-field">
+              <input type="range" min="1" max="10" [(ngModel)]="timeSpan.repeats" (change)="timeSpan.repeats = $event.target.value"/>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <!-- Timer type -->
+      <table>
+        <thead>
+        <tr>
+          <th data-field="begin" class="center-align">Stunden</th>
+          <th data-field="end" class="center-align">Minuten</th>
+          <th data-field="repeats" class="center-align"><i class="material-icons">alarm</i></th>
+          <th data-field="repeats" class="center-align"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr *ngFor="#timer of tempTrigger.timers">
+          <td class="center-align">
+            {{timer.hour}}
+            <div class="range-field">
+              <input type="range" min="0" max="23" [(ngModel)]="timer.hour"
+                     (change)="timer.hour = $event.target.value"/>
+            </div>
+
+          </td>
+          <td class=center-align>
+            {{timer.minute}}
+            <div class="range-field">
+              <input type="range" min="0" max="59" [(ngModel)]="timer.minute"
+                     (change)="timer.minute = $event.target.value"/>
+            </div>
+          </td>
+
+          <td class="center-align">
+            {{timer.hour}}:{{getMinutes(timer.minute)}} Uhr
+          </td>
+          <td class="center-align">
+            <i class="material-icons" (click)="deleteTimer(timer)" style="cursor: pointer">clear</i>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <button class="btn" (click)="addTimer()"><i class="material-icons left">add</i>Neuer Timer</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+    </div>
+  </div>
+  <div class="card-action">
+    <button class="modal-action waves-effect waves-light btn" (click)="saveTrigger(tempTrigger)">
+      Speichern
+    </button>
+    &nbsp;
+    <button (click)="navigateBack()" class="modal-action waves-effect waves-purple btn-flat">Abbrechen</button>
+  </div>
+</div>

@@ -1,0 +1,38 @@
+<button *ngIf="project.type === 'private'" materialize="leanModal" [materializeParams]="[{dismissible: true}]" (click)="initUser()"
+        class="waves-effect waves-light btn modal-trigger right" data-target="createUser">
+  <i class="material-icons left">add</i> User
+</button>
+<!-- New user modal -->
+<div id="createUser" class="modal" style="min-height: 440px">
+  <div class="modal-content">
+
+    <h4 class="black-text">
+      <i class="left medium material-icons" style="font-size: 35px">face</i>
+      <span>User hinzufügen</span>
+    </h4>
+
+    <div class="row">
+      <br>
+      <div class="input-field col s12 m12 l12">
+        <!--<i class="material-icons prefix">assessment</i>-->
+        <input id="users" type="text" class="validate" [(ngModel)]="userEmails" autofocus>
+        <label for="users" class="active">Email Adressen</label>
+      </div>
+      <div class="col s12 grey-text">
+        <i class="left material-icons blue-text">info</i> Geben Sie einen Alias für diese Messung ein, welche Sie
+        dann später zu dessen einfacher Identifikation verwenden können .
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer grey lighten-3" style="position: fixed; bottom: 0;">
+
+    <button class="modal-action waves-effect waves-light btn"
+            (click)="createUsers()">
+      Erstellen
+    </button>
+    &nbsp;
+    <button class="modal-action modal-close waves-effect waves-pink btn-flat">
+      Abbrechen
+    </button>
+  </div>
+</div>

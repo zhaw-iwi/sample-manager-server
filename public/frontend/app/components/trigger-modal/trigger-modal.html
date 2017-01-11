@@ -1,0 +1,266 @@
+<button materialize="leanModal" [materializeParams]="[{dismissible: true}]" (click)="initTrigger()"
+        class="waves-effect waves-light btn modal-trigger right" data-target="createTrigger">
+  <i class="material-icons left">add</i> Trigger
+</button>
+<!-- New trigger modal -->
+<div id="createTrigger" class="modal" style="min-height: 440px">
+  <div class="modal-content">
+    <!-- Step 1: Select trigger type -->
+    <div *ngIf="modalStep === 1" class="">
+      <div class="row">
+        <div class="col s6 m4 l4" *ngFor="#triggerType of triggerTypes">
+          <div class="card hoverable trigger-type">
+            <div class="card-content" (click)="selectType(triggerType)">
+              <div class="center-align">
+                <i class="material-icons medium pink-text">{{getIconByType(triggerType)}}</i>
+                <h5 class="grey-text text-darken-1">{{ 'triggerType_' + triggerType | translate}}</h5>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!--
+      <div class="divider"></div>
+      <br>
+      <div class="row">
+        <div class="col s6 m4 l4" *ngFor="#triggerType of triggerSpecialTypes">
+          <div class="card hoverable trigger-type">
+            <div class="card-content" (click)="selectType(triggerType)">
+              <div class="center-align">
+                <i class="material-icons medium pink-text">{{getIconByType(triggerType)}}</i>
+                <h5 class="grey-text text-darken-1">{{ 'triggerType_' + triggerType | translate}}</h5>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        -->
+        <!--
+        <div class="input-field col s12 m12 l12">
+
+        </div>
+        <div class="input-field col s12 m12 l12">
+
+          <input id="name" type="text" class="validate" [(ngModel)]="tempTrigger.text" autofocus>
+          <label for="name">Fragetext eingeben</label>
+        </div>
+
+
+      </div>
+      <br>
+        -->
+    </div>
+
+    <!-- Step 2: Alias -->
+    <div *ngIf="modalStep === 2">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Alias</span>
+      </h4>
+
+      <div class="row">
+        <br>
+        <div class="input-field col s12 m12 l12">
+          <!--<i class="material-icons prefix">assessment</i>-->
+          <input id="alias" type="text" class="validate" [(ngModel)]="tempTrigger.alias" autofocus>
+          <label for="alias" class="active">Alias</label>
+        </div>
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Geben Sie einen Alias für diesen Trigger ein, welchen Sie
+          dann später zu dessen einfacher Identifikation verwenden können.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Cron Expression -->
+    <div *ngIf="modalStep === 3 && tempTrigger.type !== 'timer'">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Wiederholungen</span>
+      </h4>
+      <div class="row">
+        <br>
+        <table>
+
+          <thead>
+          <tr>
+            <th data-field="begin" class="center-align"><i class="material-icons">first_page</i></th>
+            <th data-field="end" class="center-align"><i class="material-icons">last_page</i></th>
+            <th data-field="repeats" class="center-align"><i class="material-icons">replay</i></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr>
+            <td class="center-align">
+              {{timeSpan.begin}} Uhr
+              <div class="range-field">
+                <input type="range" min="0" max="{{timeSpan.end}}" [(ngModel)]="timeSpan.begin"
+                       (change)="timeSpan.begin = $event.target.value"/>
+              </div>
+            </td>
+            <td class=center-align>
+              {{timeSpan.end}} Uhr
+              <div class="range-field">
+                <input type="range" min="{{timeSpan.begin}}" max="24" [(ngModel)]="timeSpan.end"
+                       (change)="timeSpan.end = $event.target.value"/>
+              </div>
+            </td>
+            <td class="center-align">
+              {{timeSpan.repeats}} mal
+              <div class="range-field">
+                <input type="range" min="0" max="10" [(ngModel)]="timeSpan.repeats"
+                       (change)="timeSpan.repeats = $event.target.value"/>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+<!--
+        <div class="input-field col s12 m12 l12" *ngFor="#cron of tempTrigger.cronExpression">
+          <input id="cronExpression" type="text" class="validate">
+          <label for="cronExpression" class="active">Cron Expression {{1}}</label>
+        </div>
+        -->
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Geben Sie einen Intervall an, zu welchem der Trigger ausgelöst werden soll.
+        </div>
+        <br><br>
+        <!--
+        <a href="http://www.cronmaker.com/" target="_blank">Cron Maker</a>
+        -->
+      </div>
+
+    </div>
+    <!-- Step 3 (Timer):  -->
+    <div *ngIf="modalStep === 3 && tempTrigger.type === 'timer'">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Timer Einstellungen</span>
+      </h4>
+      <div class="row">
+        <br>
+        <table>
+
+          <thead>
+          <tr>
+            <th data-field="begin" class="center-align">Stunden</th>
+            <th data-field="end" class="center-align">Minuten</th>
+            <th data-field="repeats" class="center-align"><i class="material-icons">alarm</i></th>
+            <th data-field="repeats" class="center-align"></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="#timer of tempTrigger.timers">
+            <td class="center-align">
+              {{timer.hour}}
+              <div class="range-field">
+                <input type="range" min="0" max="23" [(ngModel)]="timer.hour"
+                       (change)="timer.hour = $event.target.value"/>
+              </div>
+
+            </td>
+            <td class=center-align>
+              {{timer.minute}}
+              <div class="range-field">
+                <input type="range" min="0" max="59" [(ngModel)]="timer.minute"
+                       (change)="timer.minute = $event.target.value"/>
+              </div>
+            </td>
+
+            <td class="center-align">
+              {{timer.hour}}:{{getMinutes(timer.minute)}} Uhr
+            </td>
+            <td class="center-align">
+              <i class="material-icons" (click)="deleteTimer(timer)" style="cursor: pointer">clear</i>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button class="btn" (click)="addTimer()"><i class="material-icons left">add</i>Timer</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <br>
+
+        <!--
+                <div class="input-field col s12 m12 l12" *ngFor="#cron of tempTrigger.cronExpression">
+                  <input id="cronExpression" type="text" class="validate">
+                  <label for="cronExpression" class="active">Cron Expression {{1}}</label>
+                </div>
+                -->
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Geben Sie die Zeiten an, zu welchen der Trigger ausgelöst werden soll.
+        </div>
+        <br><br>
+
+      </div>
+
+    </div>
+
+    <!-- Step 4a: Area trigger -->
+    <div *ngIf="modalStep === 4 && tempTrigger.type === 'place'">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Ort Trigger</span>
+
+      </h4>
+      <div class="row">
+        <h3>Dieses Feature ist in Bearbeitung...</h3>
+        <div class="col s12 m12 l12">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d21608.670893950235!2d8.61789125!3d47.390796599999994!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sch!4v1462069790005" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!-- Step 4b: Social Media trigger -->
+    <div *ngIf="modalStep === 4 && tempTrigger.type === 'social'">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Social Media Trigger</span>
+      </h4>
+      <div class="row">
+        <br>
+        <h3>Dieses Feature ist in Bearbeitung...</h3>
+      </div>
+
+    </div>
+    <!-- Step 4c: Health trigger -->
+    <div *ngIf="modalStep === 4 && tempTrigger.type === 'health'">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempTrigger.type)}}</i>
+        <span>Health Trigger</span>
+      </h4>
+      <div class="row">
+        <br>
+        <h3>Dieses Feature ist in Bearbeitung...</h3>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer grey lighten-3" style="position: fixed; bottom: 0px;">
+
+    <button *ngIf="modalStep !== 4 && modalStep !== 1 && !(tempTrigger.type === 'random' && modalStep === 3) && !(tempTrigger.type === 'timer' && modalStep === 3) &&
+                   !(tempTrigger.type === 'external' && modalStep === 2)" class="modal-action waves-effect waves-light btn" (click)="step(1)">
+      Weiter
+    </button>
+    &nbsp;
+    <button *ngIf="modalStep === 4 || modalStep == 3 && tempTrigger.type === 'random' || modalStep === 3 && tempTrigger.type === 'timer' ||
+                  (modalStep === 2 && tempTrigger.type === 'external')" class="modal-action waves-effect waves-light btn"
+            (click)="saveTrigger(tempTrigger)">
+      {{ tempTrigger._id ? 'Speichern' : 'Erstellen' }}
+    </button>
+    &nbsp;
+    <button *ngIf="modalStep === 1" class="modal-action waves-effect waves-pink btn-flat" (click)="cancel()">
+      Abbrechen
+    </button>
+    <button *ngIf="modalStep !== 1 ||
+                  (modalstep === 3 && tempTrigger.type === 'random')" (click)="step(-1)" class="modal-action waves-effect waves-pink btn-flat">
+      Zur&uuml;ck
+    </button>
+
+  </div>
+</div>

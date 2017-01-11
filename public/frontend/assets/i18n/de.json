@@ -1,0 +1,20 @@
+{
+  "measureType_select_one": "Einzelantwort",
+  "measureType_select_many": "Mehrfachantwort",
+  "measureType_visual_analog_scale": "Visual Analog Scale",
+  "measureType_likert_scale": "Likert Scale",
+  "measureType_yes_no": "Ja / Nein",
+  "measureType_rating": "Bewertung",
+  "measureType_frequency": "Häufigkeit",
+  "measureType_open": "Offene Frage",
+  "measureType_location": "Standort",
+  "measureType_volume": "Lautstärke",
+  "triggerType_and": "UND",
+  "triggerType_or": "ODER",
+  "triggerType_place": "Ort",
+  "triggerType_random": "Zufall",
+  "triggerType_timer": "Timer",
+  "triggerType_social": "Social Media",
+  "triggerType_health": "Gesundheit",
+  "triggerType_external": "Extern"
+}

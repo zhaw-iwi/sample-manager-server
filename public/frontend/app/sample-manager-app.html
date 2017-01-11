@@ -1,0 +1,126 @@
+
+<div class="app-content">
+  <nav class="grey">
+    <!--<div class="brand"><img src="../assets/images/icon_inverted.png" height="45px" /></div>-->
+    <div class="nav-wrapper">
+      <divs class="col s12">
+        <a href="#home" class="breadcrumb"><img src="../../../assets/images/logo_heading.png" style="position: absolute; top: 10px" height="35px"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+        <a *ngIf="isActive('Projekte')" href="#/projekte" class="breadcrumb">Projekte</a>
+        <a *ngIf="isActive('Projekte') && currentProject" href="#/projekte/{{currentProject ? currentProject._id : '?'}}" class="breadcrumb extended">{{currentProject ? currentProject.name : '?'}}</a>
+        <a *ngIf="isActive('Projekte') && currentProject && currentMeasure" class="breadcrumb extended">{{currentMeasure.alias | slice:0:15}}{{currentMeasure.alias.length > 15 ? '...' : ''}}</a>
+        <a *ngIf="isActive('Projekte') && currentProject && currentTrigger" class="breadcrumb extended">{{currentTrigger.alias | slice:0:15}}{{currentTrigger.alias.length > 15 ? '...' : ''}}</a>
+      </divs>
+    </div>
+
+    <a materialize="sideNav" [materializeParams]="[{edge:'left', menuWidth: 65, closeOnClick: false}]"
+       href="#" data-activates="slide-out" class="button-collapse" style="position: absolute;top: 0px;"><i class="material-icons">view_headline</i></a>
+
+    <button materialize="leanModal"
+            [materializeParams]="params"
+            class="btn modal-trigger right"
+            [ngClass]="{ grey: authorized }"
+            data-target="login"
+            style="position: absolute; right: 10px; top: 12px">
+      {{authorized ? 'Logout' : 'Login'}}
+    </button>
+
+    <ul id="slide-out" class="side-nav fixed">
+      <li [class]="isActive('Home') ? 'active' : ''"><a [routerLink]="['Home']"><span><i class="material-icons">home</i></span></a></li>
+      <li *ngIf="authorized" [class]="isActive('Projekte') ? 'active' : ''"><a [routerLink]="['Projekte']"><span><i class="material-icons">class</i></span></a></li>
+    </ul>
+
+  </nav>
+
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+<div id="login" class="modal grey ligten-2">
+  <div *ngIf="showLoadingSpinner" style="min-height: 200px; padding: 80px">
+    <loading-spinner [smTrigger]="showLoadingSpinner"></loading-spinner>
+  </div>
+
+  <div class="modal-content" *ngIf="!showLoadingSpinner">
+
+    <div *ngIf="!authorized" class="card col l6 m6 s12">
+      <div class="card-content">
+
+        <div *ngIf="!authorized">
+
+        </div>
+        <span class="card-title"></span>
+        <!--<i class="medium material-icons center">account_circle</i>-->
+        <h5 class="pink-text accent-4">Login</h5>
+
+
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">face</i>
+            <input id="login1" type="email" class="validate" [(ngModel)]="login.login">
+            <label for="login1">Email</label>
+          </div>
+          <div class="input-field col s12">
+            <i class="material-icons prefix">lock</i>
+            <input id="password" type="password" class="validate" [(ngModel)]="login.password">
+            <label for="password">Password</label>
+          </div>
+        </div>
+        <div class="switch left">
+          <label>
+
+            <input type="checkbox">
+            <span class="lever"></span>
+            Angemeldet bleiben
+          </label>
+        </div>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+      </div>
+      <div class="card-action">
+        <a class="waves-effect waves-light btn" (click)="loginUser(login)">login</a>
+        <a class="waves-effect btn-flat activator">registrieren</a>
+      </div>
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4">Account erstellen<i
+          class="material-icons right">close</i></span>
+        <form class="col s12 card-content" novalidate>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">face</i>
+              <input id="email" type="email" class="validate" [(ngModel)]="newUser.email">
+              <label for="email">Email</label>
+            </div>
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input id="password1" type="password" class="validate" [(ngModel)]="newUser.password">
+              <label for="password1">Password</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col s12">
+              <a class="waves-effect waves-light btn" (click)="registerUser(newUser)">registrieren</a>
+              <!--<a class="waves-effect btn-flat activator">zurück</a>-->
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div *ngIf="authorized" class="card col l6 m6 s12">
+      <div class="card-content">
+        <span class="card-title"></span>
+        <!--<i class="medium material-icons center">account_circle</i>-->
+        <h5 class="pink-text accent-4">Profil</h5>
+
+        <p>Email: {{user.email}}</p>
+        <p>Username: {{user.username}}</p>
+
+        <p>&nbsp;</p>
+      </div>
+      <div class="card-action">
+        <a class="waves-effect waves-light btn" (click)="logoutUser()">logout</a>
+      </div>
+
+    </div>
+  </div>
+</div>

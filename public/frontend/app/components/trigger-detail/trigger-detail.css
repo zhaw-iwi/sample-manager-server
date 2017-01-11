@@ -1,0 +1,11 @@
+.card {
+  min-height: 600px;
+  margin-top:2em
+}
+
+.card-action {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}

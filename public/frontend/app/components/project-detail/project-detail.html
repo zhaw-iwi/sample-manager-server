@@ -1,0 +1,292 @@
+<br>
+<!-- Loading Spinner -->
+<div *ngIf="showLoadingSpinner">
+  <br>
+  <br>
+  <loading-spinner [smTrigger]="showLoadingSpinner"></loading-spinner>
+</div>
+
+<div class="row" *ngIf="!showLoadingSpinner">
+  <div class="col s12">
+    <h3 class="grey-text text-darken-1"><img src="{{project.imageUrl}}" height="32px" width="32px" class="circle" /> {{project.name}}</h3>
+    <div class="row">
+      <div class="col s6 grey-text text-darken-1">
+         <span *ngIf="project.type === 'public'" class="material-icons left">language</span>
+        <span *ngIf="project.type === 'private'" class="material-icons left">person</span>
+        <div>&nbsp;Start: {{project.createdDate | date:'longDate'}}</div>
+      </div>
+      <div class="col s4" *ngIf="!showLoadingSpinner && project && (project.measures.length === 0 || project.triggers.length === 0)">
+
+        <div class="help-image-task1">
+          <img src="../../../assets/images/task1.png" class="help-image" *ngIf="project.triggers.length === 0" />
+          <img src="../../../assets/images/task1_stroked.png" class="help-image" *ngIf="project.triggers.length > 0" />
+        </div>
+        <div class="help-image-task2">
+          <img src="../../../assets/images/task2.png" class="help-image" *ngIf="project.measures.length === 0" />
+          <img src="../../../assets/images/task2_stroked.png" class="help-image" *ngIf="project.measures.length > 0" />
+        </div>
+      </div>
+
+    </div>
+    <br>
+  </div>
+
+  <div class="col s12">
+    <ul class="tabs grey lighten-3" materialize="tabs">
+      <li class="tab col s3"><a href="#measures">Messungen</a></li>
+      <li class="tab col s3"><a href="#triggers">Trigger</a></li>
+      <li class="tab col s3"><a href="#users">User</a></li>
+      <li class="tab col s3"><a href="#statistics">Statistiken</a></li>
+    </ul>
+  </div>
+  <!-- Measure -->
+  <div id="measures" class="col s12">
+    <br>
+    <div>
+
+      <!-- Add new Measure -->
+      <div class="row">
+        <div class="col s12">
+          <measure-modal [smProject]="project" (smChanged)="refreshProject()"></measure-modal>
+        </div>
+      </div>
+      <div class="row">
+        <div *ngFor="#measure of project.measures" class="col s12 m6 l6">
+          <div class="card">
+            <div class="card-content">
+
+              <!--<span class="badge new">{{'measureType_' + measure.type | translate}}</span>-->
+              <i class="medium material-icons">{{getIconByType(measure.type)}}</i>
+
+              <span class="grey-text right" *ngIf="measure.trigger">
+                 <i class="right material-icons">{{getIconByType(getTriggerById(measure.trigger).type)}}</i> {{getTriggerById(measure.trigger).alias}}
+              </span>
+
+              <div class="card-title">{{measure.alias}}
+                <span class="pink-text right text-darken-1" style="font-size: small"> {{'measureType_' + measure.type | translate}}</span>
+              </div>
+
+              <p class="grey-text measure-text" *ngIf="measure.text">
+                <i class="left material-icons">help</i>
+                {{measure.text}}
+              </p>
+              &nbsp;
+              <p class="grey-text" *ngIf="measure.values && measure.values.length > 0">
+                <i class="left material-icons">feedback</i>
+                <span>{{getMeasureValues(measure.values)}}</span>
+              </p>
+
+
+            </div>
+
+            <div class="card-action">
+              <a class="btn-floating measure-detail btn-large waves-effect waves-light "
+                 (click)="navigateToMeasure(measure._id)">
+                <i class="material-icons">mode_edit</i>
+              </a>
+
+              <button class="btn-flat" (click)="triggerManual(measure._id)">
+                Auslösen
+              </button>
+              <button materialize="leanModal"
+                      [materializeParams]="params"
+                      class="btn-flat"
+                      data-target="deleteMeasure"
+                      (click)="measureToDelete = measure">
+                Löschen
+              </button>
+            </div>
+
+          </div>
+        </div>
+        <div *ngIf="!showLoadingSpinner && project && project.measures.length === 0"
+             class="help-image-trigger-wrapper">
+          <img src="../../../assets/images/help_measure.png" class="help-image-trigger" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Trigger -->
+  <div id="triggers" class="col s12">
+    <div class="row">
+      <div class="col s12">
+        <br>
+        <trigger-modal [smProject]="project" (smChanged)="refreshProject()"></trigger-modal>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngFor="#trigger of project.triggers" class="col s12 m6 l6">
+        <div class="card">
+          <div class="card-content">
+            <!--
+            <span class="grey-text right">
+                 <i class="right material-icons">{{getIconByType(getTriggerById(measure.trigger).type)}}</i> {{getTriggerById(trigger.trigger).alias}}
+              </span>
+-->
+            <i class="medium material-icons">{{getIconByType(trigger.type)}}</i>
+
+            <div class="card-title">{{trigger.alias}}
+              <span class="pink-text right text-darken-1" style="font-size: small">
+                {{'triggerType_' + trigger.type | translate}}</span>
+            </div>
+
+            <div class="measure-text" *ngIf="trigger.type === 'random'">
+              <div *ngIf="trigger.timeSpan">
+                <p  class="grey-text">
+                  <i class="left material-icons">alarm</i>
+                  {{getDecodedTimeSpan(trigger).repeats}} mal von {{getDecodedTimeSpan(trigger).begin}} bis {{getDecodedTimeSpan(trigger).end}} Uhr
+                </p>
+                &nbsp;
+              </div>
+
+            </div>
+
+            <div *ngIf="trigger.timers">
+              <i class="material-icons left">alarm</i>
+              <span class="grey-text" *ngFor="#timer of trigger.timers; #i = index;">
+                {{timer.hour}}:{{timer.minute}} Uhr<span *ngIf="i !== (trigger.timers.length - 1)">,</span>
+              </span>
+              &nbsp;
+            </div>
+
+          </div>
+
+          <div class="card-action">
+            <a class="btn-floating measure-detail btn-large waves-effect waves-light "
+               (click)="navigateToTrigger(trigger._id)">
+              <i class="material-icons">mode_edit</i>
+            </a>
+
+            <button materialize="leanModal"
+                    [materializeParams]="params"
+                    class="btn-flat"
+                    data-target="deleteTrigger"
+                    (click)="triggerToDelete = trigger">
+              Löschen
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="help-image-trigger-wrapper" *ngIf="!showLoadingSpinner && project && project.triggers.length === 0">
+        <img src="../../../assets/images/help_trigger.png" class="help-image-trigger" />
+      </div>
+    </div>
+  </div>
+
+  <!-- User -->
+  <div id="users" class="col s12">
+    <div class="row">
+      <div class="col s12">
+        <br>
+        <!-- Action Buttons -->
+        <a class="btn-floating waves-effect waves-light user-delete"
+           (click)="navigateToTrigger(user._id)">
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Löschen">delete</i>
+        </a>
+        &nbsp;
+        <a class="btn-floating waves-effect waves-light password-reset"
+           (click)="navigateToTrigger(user._id)">
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Passwort zurücksetzen">lock</i>
+        </a>
+        &nbsp;
+        <a class="btn-floating waves-effect waves-light resend-email"
+           (click)="navigateToTrigger(user._id)">
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Einladung senden">send</i>
+        </a>
+        <user-modal [smProject]="project" (smChanged)="refreshProject()"></user-modal>
+      </div>
+    </div>
+    <div class="row">
+      <div *ngFor="#user of project.users" class="col s12 m6 l4">
+        <div class="card user-card">
+          <div class="card-content" style="padding: 12px 20px">
+
+            <div class="card-title activator truncate" style="font-size: 16px">
+              <input type="checkbox" [attr.id]="user._id" [(ngModel)]="user.checked" />
+              <label [attr.for]="user._id">{{user.email}}</label>
+
+            <span class="pink-text right text-darken-1">
+              <img *ngIf="user.gcmToken" src="http://dummyimage.com/10x10/d81b60/000d.png&text=+" class="circle" height="12px" width="12px"  />
+              <img *ngIf="!user.gcmToken" src="http://dummyimage.com/10x10/9e9e9e/000d.png&text=+" class="circle" height="12px" width="12px"  />
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistiken -->
+  <div id="statistics" class="col s12" >
+    <div *ngFor="#statistic of statistics" class="grey-text">
+      <h3 class="grey-text text-darken-1">{{statistic.alias}}</h3>
+      <table>
+        <thead>
+        <tr>
+
+          <th data-field="name" class="">Zeit</th>
+          <th data-field="price" class="">User</th>
+          <th data-field="price" class="">Antwort</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr *ngFor="#record of statistic.records">
+
+          <td class="">
+            {{getDate(record.created) | date:'medium'}}
+          </td>
+          <td class="">
+            {{record.user.email}}
+          </td>
+          <td>
+            {{record.value}}
+          </td>
+
+        </tr>
+
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="statistics && statistics.length === 0" class="help-image-statistics-wrapper">
+      <img src="../../../assets/images/nothing.png" class="help-image-statistics" />
+    </div>
+  </div>
+</div>
+
+<!-- Delete measure confirm modal -->
+<div id="deleteMeasure" class="modal bottom-sheet">
+  <div class="modal-content">
+    <h4 class="black-text">Messung <strong class="pink-text">{{measureToDelete.alias}}</strong> wirklich löschen?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="deleteMeasure(measureToDelete)">Löschen</button>&nbsp;
+    <button class="modal-action modal-close waves-effect waves-yellow btn-flat">Abbrechen</button>
+  </div>
+</div>
+
+<!-- Delete measure confirm modal -->
+<div id="deleteTrigger" class="modal bottom-sheet">
+  <div class="modal-content">
+    <h4 class="black-text">Trigger <strong class="pink-text">{{triggerToDelete.alias}}</strong> wirklich löschen?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="deleteTrigger(triggerToDelete)">Löschen</button>&nbsp;
+    <button class="modal-action modal-close waves-effect waves-yellow btn-flat">Abbrechen</button>
+  </div>
+</div>

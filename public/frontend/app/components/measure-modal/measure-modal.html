@@ -1,0 +1,230 @@
+<button materialize="leanModal" [materializeParams]="[{dismissible: true}]" (click)="initMeasure()"
+        class="waves-effect waves-light btn modal-trigger right" data-target="createMeasure">
+  <i class="material-icons left">add</i> Messung
+</button>
+<!-- New measure modal -->
+<div id="createMeasure" class="modal" style="min-height: 440px">
+  <div class="modal-content">
+    <!-- Step 1: Select measure type -->
+    <div *ngIf="modalStep === 1" class="">
+      <div class="row">
+        <div class="col s6 m4 l4" *ngFor="#measureType of measureTypes">
+          <div class="card hoverable measure-type">
+            <div class="card-content" (click)="selectType(measureType)">
+              <div class="center-align">
+                <i class="material-icons medium pink-text">{{getIconByType(measureType)}}</i>
+                <h5 class="grey-text text-darken-1">{{ 'measureType_' + measureType | translate}}</h5>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!--
+        <div class="input-field col s12 m12 l12">
+
+        </div>
+        <div class="input-field col s12 m12 l12">
+
+          <input id="name" type="text" class="validate" [(ngModel)]="tempMeasure.text" autofocus>
+          <label for="name">Fragetext eingeben</label>
+        </div>
+
+        <table>
+          <thead>
+          <tr>
+            <th data-field="id" class="center-align"><i class="material-icons">first_page</i></th>
+            <th data-field="name" class="center-align"><i class="material-icons">last_page</i></th>
+            <th data-field="price" class="center-align"><i class="material-icons">replay</i></th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="#trigger of tempMeasure.triggers">
+            <td class="center-align">
+              {{trigger.begin}} Uhr
+              <div class="range-field">
+                <input type="range" min="0" max="{{trigger.end}}" [(ngModel)]="trigger.begin"
+                       (change)="trigger.begin = $event.target.value"/>
+              </div>
+            </td>
+            <td class=center-align>
+              {{trigger.end}} Uhr
+              <div class="range-field">
+                <input type="range" min="{{trigger.begin}}" max="24" [(ngModel)]="trigger.end"
+                       (change)="trigger.end = $event.target.value"/>
+              </div>
+            </td>
+            <td class="center-align">
+              {{trigger.repeats}} mal
+              <div class="range-field">
+                <input type="range" min="0" max="10" [(ngModel)]="trigger.repeats"
+                       (change)="trigger.repeats = $event.target.value"/>
+              </div>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        -->
+      </div>
+    </div>
+
+    <!-- Step 2: Alias -->
+    <div *ngIf="modalStep === 2">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+        <span>Alias</span>
+      </h4>
+
+      <div class="row">
+        <br>
+        <div class="input-field col s12 m12 l12">
+          <!--<i class="material-icons prefix">assessment</i>-->
+          <input id="alias" type="text" class="validate" [(ngModel)]="tempMeasure.alias" autofocus>
+          <label for="alias" class="active">Alias</label>
+        </div>
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Geben Sie einen Alias für diese Messung ein, welche Sie
+          dann später zu dessen einfacher Identifikation verwenden können .
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Fragetext -->
+    <div *ngIf="modalStep === 3">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+        <span>Frage</span>
+      </h4>
+      <div class="row">
+        <br>
+        <div class="input-field col s12 m12 l12">
+          <!--<i class="material-icons prefix">assessment</i>-->
+          <input id="name1" type="text" class="validate" [(ngModel)]="tempMeasure.text" autofocus>
+          <label for="name1" class="active">Fragetext eingeben</label>
+        </div>
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Geben Sie die Frage ein, welche dem Teilnehmer angezeigt
+          werden soll.
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Antworten -->
+    <div *ngIf="modalStep === 4">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+        <span>Antworten</span>
+      </h4>
+      <div class="row">
+        <div class="col s12 m12 l12">
+          <div class="center-align">
+            <h5>{{tempMeasure.text}}</h5>
+            <br>
+          </div>
+          <div class="center-align">
+                <span *ngFor="#value of tempMeasure.values">
+                  <div class="chip" (click)="removeAnswer(value)" style="cursor: pointer">
+                    {{value}}
+                    <i class="material-icons right">clear</i>
+                  </div>
+                  &nbsp;
+                </span>
+          </div>
+          <br>
+          <form class="row">
+            <div class="input-field col s12 m12 l12">
+              <input id="newValue" type="text" class="validate" [(ngModel)]="newValue">
+              <label for="newValue">Antwortmöglichkeiten (hinzufügen mit ENTER)</label>
+            </div>
+            <div class="col s12 grey-text">
+              <i class="left material-icons blue-text">info</i> Löschen Sie unbenötigte Antworten durch Klicken auf "X". Geben Sie hier die Antwortmöglichkeiten ein, welche
+              dem Teilnehmer angezeigt werden sollen. Es dürfen <strong>keine</strong> Antworten doppelt vorkommen.
+            </div>
+            <!--<i class="material-icons prefix">code</i>-->
+
+            <button type="submit" style="display: none" class="btn waves-effect waves-light left"
+                    (click)="addAnswer()"><i
+              class="material-icons">add</i></button>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Trigger -->
+    <div *ngIf="modalStep === 5">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+        <span>Trigger</span>
+      </h4>
+      <div class="row">
+        <br>
+        <div class="input-field col s12">
+          <select materialize="material_select" [(ngModel)]="tempMeasure.trigger">
+            <option value="" disabled>Bitte wählen</option>
+            <option *ngFor="#trigger of project.triggers" value="{{trigger._id}}">{{trigger.alias}}</option>
+          </select>
+          <label>Trigger</label>
+        </div>
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> Wählen Sie den Trigger aus, welcher die Messung auslösen soll.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Step 6: Parent -->
+    <div *ngIf="modalStep === 6">
+      <h4 class="black-text">
+        <i class="left medium material-icons" style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+        <span>Vorgänger</span>
+      </h4>
+      <div class="row">
+        <br>
+        <div class="input-field col s12">
+          <select materialize="material_select"
+                  [(ngModel)]="parentMeasureId"
+                  (ngModelChange)="onChange(parentMeasureId)">
+            <option value="" disabled>Bitte wählen</option>
+            <option *ngFor="#measure of project.measures"
+                    value="{{measure._id}}">{{measure.alias}}
+
+            </option>
+          </select>
+          <label>Vorgänger</label>
+        </div>
+        <div *ngIf="tempMeasure.parent" class="input-field col s12">
+          <select materialize="material_select" multiple [(ngModel)]="tempMeasure.parentValues" >
+            <option value="" disabled>Optional</option>
+            <option *ngFor="#value of parentMeasure.values" value="{{value}}">{{value}}</option>
+          </select>
+          <label>Bedingte Antworten</label>
+        </div>
+        <div class="col s12 grey-text">
+          <i class="left material-icons blue-text">info</i> OPTIONAL: Wählen Sie eine andere Messung als Vorgänger aus.
+          Sie können zusätzlich Antwortwerte des Vorgängers auswählen, um diese Messung nur bedingt auszuführen.
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="modal-footer grey lighten-3" style="position: fixed; bottom: 0px;">
+
+    <button *ngIf="modalStep !== 5 && modalStep !== 1" class="modal-action waves-effect waves-light btn" (click)="step(1)">
+      Weiter
+    </button>
+    &nbsp;
+    <button *ngIf="modalStep === 5" class="modal-action waves-effect waves-light btn"
+            (click)="saveMeasure(tempMeasure)">
+      {{ tempMeasure._id ? 'Speichern' : 'Erstellen' }}
+    </button>
+    &nbsp;
+    <button *ngIf="modalStep === 1" class="modal-action waves-effect waves-pink btn-flat" (click)="cancel()">
+      Abbrechen
+    </button>
+    <button *ngIf="modalStep !== 1" (click)="step(-1)" class="modal-action waves-effect waves-pink btn-flat">
+      Zur&uuml;ck
+    </button>
+
+  </div>
+</div>

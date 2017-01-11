@@ -1,0 +1,42 @@
+.btn-floating.project-detail {
+  position: absolute;
+  top: 88px;
+  right: 10px;
+}
+.btn-floating.project-delete {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+.btn-floating.project-renew {
+  position: absolute;
+  bottom: 20px;
+  right: 70px;
+}
+
+.btn-floating.project-start {
+  position: absolute;
+  bottom: 20px;
+  right: 120px;
+}
+.btn-floating.project-restart {
+  position: absolute;
+  bottom: 20px;
+  right: 170px;
+}
+
+.help-image-project {
+  text-align: right;
+
+}
+@media screen and (min-width: 993px) {
+  .help-image {
+    height:200px;
+  }
+}
+@media screen and (max-width: 993px) {
+  .help-image {
+    height:150px;
+  }
+}
+

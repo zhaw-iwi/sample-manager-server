@@ -1,0 +1,12 @@
+.card.measure-type {
+  height: 150px;
+}
+.measure-type .card-content {
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.modal-footer > button {
+  margin-right: 5px;
+}

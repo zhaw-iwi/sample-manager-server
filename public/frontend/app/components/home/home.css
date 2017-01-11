@@ -1,0 +1,68 @@
+@media screen and (min-width: 993px) {
+  .svendroid-text {
+    margin-right: 275px;
+    margin-left: 50px;
+  }
+
+}
+@media screen and (max-width: 993px) {
+  .svendroid-text {
+    margin-right: 25px;
+    margin-left: 25px;
+  }
+
+}
+@media screen and (min-width: 993px) {
+  .help-image {
+    height: 190px;
+  }
+  .help-image-login {
+    position: absolute;
+    top: 80px;
+    right: 80px
+  }
+  .help-image-projects {
+    position: fixed;
+    top: 80px;
+    left: 70px
+  }
+
+}
+@media screen and (max-width: 993px) {
+  .help-image {
+    height: 100px;
+  }
+  .help-image-login {
+    position: absolute;
+    top: 60px;
+    right: 30px
+  }
+  .help-image-projects {
+    position: absolute;
+    top: 60px;
+    left: 20px
+  }
+  .svendroid-speaking {
+    margin-left: 250px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .svendroid-speaking {
+    margin-left: 170px;
+  }
+}
+
+/* Google Play Logo */
+@media screen and (max-width: 993px) {
+  .google-play-logo > img {
+    max-height: 110px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .google-play-logo > img {
+    max-height: 80px;
+  }
+}
+

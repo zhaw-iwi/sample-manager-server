@@ -1,0 +1,80 @@
+.card {
+  height: 300px;
+}
+
+.card-action {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+}
+
+.btn-floating.measure-detail {
+  position: absolute;
+  bottom: 48px;
+  right: 10px;
+}
+
+.measure-text {
+  padding-top: 0.6em;
+}
+
+
+
+.card-title.grey-text.text-darken-2 {
+  position: absolute;
+  bottom: 23px;
+  right: 30px;
+}
+
+.gcm-indicator {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 2px;
+}
+
+.card.user-card {
+  height: 70px;
+}
+
+.help-image-task1 {
+  position: absolute;
+  top: 90px;
+}
+.help-image-task2 {
+  position: absolute;
+  top: 150px;
+}
+.help-image-trigger-wrapper {
+  text-align: right;
+  margin-right: 40px;
+}
+.help-image-statistics-wrapper {
+  margin-top: 100px;
+  text-align: center;
+}
+@media screen and (min-width: 993px) {
+  .help-image {
+    height:70px;
+
+  }
+  .help-image-trigger {
+    height:200px;
+  }
+  .help-image-statistics {
+    height:75px;
+  }
+}
+@media screen and (max-width: 993px) {
+  .help-image {
+    height:45px;
+  }
+  .help-image-trigger {
+    height:120px;
+  }
+  .help-image-statistics {
+    height:45px;
+  }
+}
+

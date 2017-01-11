@@ -1,0 +1,175 @@
+<br>
+<div class="help-image-login" *ngIf="!authorized">
+  <img src="../../../assets/images/arrow.png" class="help-image" />
+</div>
+<div class="help-image-projects" *ngIf="authorized">
+  <img src="../../../assets/images/help_projects.png" class="help-image" />
+</div>
+<div class="center-align">
+  <h3 class="grey-text text-darken-1 svendroid-text">Hallo, ich bin <span class="pink-text text-darken-1" style="font-size: larger">Svendroid!</span></h3>
+  <p class="grey-text text-darken-1 svendroid-text" style="font-size: larger">Ich helfe Ihnen die Menschen und ihre Verhaltensweisen zu studieren. <br>
+  Sie können verschiedenste Arten von <strong class="pink-text text-darken-1">Messungen</strong> definieren.
+  Zum Beispiel Bewertungen, Ja/Nein-Fragen oder auch Standort- und Geräuschmessungen sind möglich.
+  Damit immer die richtige Messung zum richtigen Zeitpunkt ausgelöst wird, biete ich Ihnen eine breite Anzahl von <strong class="pink-text text-darken-1">Trigger</strong> an,
+    vom täglichen Zufalls-Trigger bis zum Social Media Trigger. Nähere Informationen finden Sie weiter unten.
+  </p>
+  <div class="svendroid-speaking">
+    <img src="../../../assets/images/line.png" style="vertical-align: top; " height="50px" />
+    <img src="../../../assets/images/logo.png" style="vertical-align: top; " height="250px" style="margin-top: -25px" />
+  </div>
+</div>
+<br>
+<div class="divider"></div>
+<h3>Messungen</h3>
+<br>
+<!--
+<div class="button-wrapper">
+  <div class="layer"></div>
+  <button class="main-button" (click)="openOverlay()">
+    <i class="material-icons white-text">copyright</i>
+    <div class="ripple"></div>
+  </button>
+</div>
+
+<div class="layered-content">
+  <button class="close-button btn-floating" (click)="closeOverlay()"><i class="material-icons">clear</i></button>
+  <div class="content center-align white-text">
+    <i class="material-icons large grey-text text-lighten-2" style="font-size: 120px">android</i>
+    <h3 class="grey-text text-lighten-2">Svendroid, at <span class="">your</span> service!</h3>
+
+    <p>Crafted by <strong>Sven Heinrich</strong></p>
+    <p>See also my <a href="http://github.com/99999989/">other projects</a></p>
+  </div>
+</div>
+-->
+<div class="row">
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">help</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>4 Fragetypen</h5>
+          <p>Fragen zur Häufigkeit, Bewertungen, Ja/Nein- und offene Fragen ermöglichen direktes Feedback vom Testsubjekt</p><br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">my_location</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Standortmessung</h5>
+          <p>Messen Sie den Standort, an dem sich der untersuchte Mensch befindet.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">hearing</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Geräuschmessung</h5>
+          <p>Messen Sie die Geräuschkulisse, welcher der untersuchte Mensch ausgesetzt ist .</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Trigger -->
+<div class="divider"></div>
+<h3>Trigger</h3>
+<br>
+<div class="row">
+
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">all_inclusive</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Zufalls Trigger</h5>
+          <p>... wird täglich zu einem zufälligen Zeitpunkt in einem definierbaren Zeitraum ausgelöst.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">place</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Ort Trigger</h5>
+          <p>... wird ausgelöst, sobald das Testsubjekt die definierte Zone betritt.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">group</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Social Media Trigger</h5>
+          <p>... wird abhängig von Events von Facebook ausgelöst, wie z.B. "Freund XY ist in der Nähe" oder "Freund XY ist in einer Beziehung".</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">favorite</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Gesundheits Trigger</h5>
+          <p>... wird durch Events von Fitness Trackern (z.B. FitBit) gesteuert, wodurch Messungen abhängig von Herzfrequenz und Blutdruck möglich werden</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col l6 m6 s12">
+    <div class="grey-text text-darken-1">
+      <div class="row">
+        <div class="col s4 m4 l3 center-align pink-text">
+          <i class="material-icons medium">power</i>
+        </div>
+        <div class="col s8 m8 l9">
+          <h5>Externer Trigger</h5>
+          <p>... kann einfach in jede REST-Applikation integriert werden.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="divider"></div>
+<h3>Android App</h3>
+<div class="center-align">
+  <a class="google-play-logo"
+    href='https://play.google.com/store/apps/details?id=com.svendroid.samplemanagerapp&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img
+    alt='Jetzt bei Google Play'
+    src='https://play.google.com/intl/en_us/badges/images/generic/de_badge_web_generic.png'/></a>
+</div>
+

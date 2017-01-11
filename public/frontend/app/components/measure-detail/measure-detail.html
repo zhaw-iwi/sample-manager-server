@@ -1,0 +1,74 @@
+<!-- Loading Spinner -->
+<div *ngIf="showLoadingSpinner">
+  <br>
+  <br>
+  <br>
+  <loading-spinner [smTrigger]="showLoadingSpinner"></loading-spinner>
+</div>
+
+
+<div class="card" style="height: 600px;margin-top:2em" *ngIf="tempMeasure">
+  <div class="card-content">
+    <div class="black-text card-title">
+      <i class="left medium material-icons " style="font-size: 35px">{{getIconByType(tempMeasure.type)}}</i>
+      <span>{{ tempMeasure._id ? 'Messung bearbeiten' : 'Neue Messung' }}</span>
+    </div>
+    <div class="row">
+      <div class="input-field col s12 m12 l12">
+        <button materialize="dropdown"
+                [materializeParams]="[{constrainwidth: true}]"
+                class="dropdown-button btn right"
+                [attr.data-activates]="'myMeasure'">
+          <i class="left material-icons">{{getIconByType(tempMeasure.type)}}</i>{{ 'measureType_' + tempMeasure.type | translate}}
+        </button>
+      </div>
+      <div class="input-field col s12 m12 l12">
+        <!--<i class="material-icons prefix">assessment</i>-->
+        <input id="alias" type="text" class="validate active" [(ngModel)]="tempMeasure.alias" autofocus>
+        <label for="alias">Alias</label>
+      </div>
+      <div class="input-field col s12 m12 l12">
+        <!--<i class="material-icons prefix">assessment</i>-->
+        <input id="text" type="text" class="validate active" [(ngModel)]="tempMeasure.text">
+        <label for="text">Fragetext</label>
+      </div>
+      <div class="col s12 m12 l12">
+        <div class="center-align">
+          <span *ngFor="#value of tempMeasure.values">
+           <div class="chip" (click)="removeAnswer(value)" style="cursor: pointer">
+             {{value}}
+             <i class="material-icons right">clear</i>
+           </div>
+          &nbsp;
+          </span>
+        </div>
+        <form class="row">
+          <div class="input-field col s12 m12 l12">
+            <input id="newValue" type="text" class="validate" [(ngModel)]="newValue">
+            <label for="newValue">Antwort eingeben + ENTER</label>
+          </div>
+          <!--<i class="material-icons prefix">code</i>-->
+          <div style="display: none">
+            <button type="submit" class="btn waves-effect waves-light left" (click)="addAnswer()"><i
+              class="material-icons">add</i></button>
+          </div>
+        </form>
+      </div>
+      <div class="input-field col s12">
+        <select materialize="material_select" [(ngModel)]="tempMeasure.trigger">
+          <option value="" disabled>Bitte wählen</option>
+          <option *ngFor="#trigger of project.triggers" value="{{trigger._id}}">{{trigger.alias}}</option>
+        </select>
+        <label>Trigger</label>
+      </div>
+
+    </div>
+  </div>
+  <div class="card-action">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="saveMeasure(tempMeasure)">
+      Speichern
+    </button>
+    &nbsp;
+    <button class="modal-action modal-close waves-effect waves-purple btn-flat" (click)="navigateBack()">Abbrechen</button>
+  </div>
+</div>

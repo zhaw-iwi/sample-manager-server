@@ -1,0 +1,157 @@
+<!--<h3>Projekte</h3>-->
+
+<!-- Add new project -->
+<div class="row" style="margin-top: 1em">
+  <div class="col s12">
+    <button materialize="leanModal" [materializeParams]="params" class="waves-effect waves-light btn modal-trigger right" data-target="createProject">
+      <i class="material-icons left">add</i> Projekt
+    </button>
+  </div>
+</div>
+
+<!-- Loading Spinner -->
+<div class="center-align">
+  <div class="preloader-wrapper big active" *ngIf="showLoadingSpinner">
+    <div class="spinner-layer spinner-purple-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div>
+      <div class="gap-patch">
+        <div class="circle"></div>
+      </div>
+      <div class="circle-clipper right">
+        <div class="circle"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="!showLoadingSpinner && user">
+  <div *ngFor="#project of user.projects" class="col s12 m6 l4">
+    <div class="card">
+      <div class="card-image waves-effect waves-block waves-light">
+        <img class="activator" src="{{project.imageUrl}}" height="115px">
+
+        <span class="card-title">
+          <span class="material-icons" *ngIf="project.type === 'public'">language</span>
+          <span class="material-icons" *ngIf="project.type === 'private'">person</span>
+            {{project.name}}
+          </span>
+      </div>
+
+      <div class="card-content">
+        <p>{{project.measures.length}} Messungen</p>
+        <p>{{project.triggers.length}} Trigger</p>
+
+      </div>
+      <a class="btn-floating project-detail btn-large waves-effect waves-light "
+         (click)="navigateToProject(project._id)">
+        <i class="material-icons">mode_edit</i>
+      </a>
+      <div class="card-reveal">
+        <span class="card-title grey-text text-darken-4">{{project.name}}
+          <i class="material-icons right">close</i>
+        </span>
+
+        <button *ngIf="!project.start"
+                materialize="leanModal"
+                [materializeParams]="params"
+                class="waves-effect waves-light btn-floating project-start modal-trigger card-title tooltipped"
+                data-target="startProject"
+                (click)="projectToDelete = project">
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Starten">play_arrow</i>
+        </button>
+        <button *ngIf="project.start"
+                class="waves-effect waves-light btn-floating project-start modal-trigger card-title tooltipped"
+                (click)="restartProject(project)">
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Neu starten">repeat</i>
+        </button>
+        <button materialize="leanModal"
+                [materializeParams]="params"
+                class="waves-effect waves-light btn-floating project-delete modal-trigger card-title tooltipped"
+                data-target="deleteProject"
+                (click)="projectToDelete = project">
+
+          <i class="material-icons"
+             materialize="tooltip"
+             data-position="top"
+             data-delay="100"
+             data-tooltip="Löschen">delete_forever</i>
+
+        </button>
+        <button class="waves-effect waves-light btn-floating project-renew tooltipped"
+                (click)="generateNewColor(project)"
+                materialize="tooltip"
+                data-position="top"
+                data-delay="100"
+                data-tooltip="Neu einfärben">
+
+          <i class="material-icons">autorenew</i>
+
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- New project modal -->
+<div id="createProject" class="modal">
+  <div class="modal-content">
+    <h4>Neues Projekt</h4>
+
+    <div class="row">
+      <div class="input-field col s12 m12 l12">
+        <input id="name" type="text" [(ngModel)]="newProject.name" autofocus>
+        <label for="name">Projektname</label>
+      </div>
+      <div class="input-field col s12">
+        <select materialize="material_select" [(ngModel)]="newProject.type">
+          <option value="" disabled>Bitte wählen</option>
+          <option value="public">Public</option>
+          <option value="private">Private</option>
+        </select>
+        <label>Typ</label>
+      </div>
+      <div class="col s12 grey-text">
+        <i class="left material-icons blue-text">info</i> Einem Projekt vom Typ "Public" können alle User teilnehmen.
+        Einem "Private" Projekt hingegen kann nur mit Einladung teilgenommen werden.
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer grey lighten-3">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="createProject(newProject)">Erstellen</button>&nbsp;
+    <button class="modal-action modal-close waves-effect waves-yellow btn-flat">Abbrechen</button>
+  </div>
+</div>
+<!-- Delete project confirm modal -->
+<div id="deleteProject" class="modal bottom-sheet">
+  <div class="modal-content">
+    <h4 class="black-text">Projekt <strong class="pink-text">{{projectToDelete.name}}</strong> wirklich löschen?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="deleteProject(projectToDelete)">Löschen</button>&nbsp;
+    <button class="modal-action modal-close waves-effect waves-yellow btn-flat">Abbrechen</button>
+  </div>
+</div>
+<!-- Start project confirm modal -->
+<div id="startProject" class="modal bottom-sheet">
+  <div class="modal-content">
+    <h4 class="black-text">Projekt <strong class="pink-text">{{projectToDelete.name}}</strong> wirklich starten?</h4>
+  </div>
+  <div class="modal-footer">
+    <button class="modal-action modal-close waves-effect waves-light btn" (click)="startProject(projectToDelete)">Starten</button>&nbsp;
+    <button class="modal-action modal-close waves-effect waves-yellow btn-flat">Abbrechen</button>
+  </div>
+</div>
+<!-- Help image -->
+<div class="help-image-project" *ngIf="!showLoadingSpinner && user && user.projects.length === 0">
+  <img src="../../../assets/images/help_project.png" class="help-image" />
+</div>
